@@ -9448,7 +9448,7 @@ var setFruitFromGameMode = (function() {
     var mspacfruit = new MsPacFruit();
     fruit = pacfruit;
     return function() {
-        if (gameMode == GAME_PACMAN) {
+        if (gameMode == GAME_PACMAN || GAME_ATARIWOMAN) {
             fruit = pacfruit;
         }
         else {
