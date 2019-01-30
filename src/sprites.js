@@ -2551,3 +2551,13 @@ var drawExclamationPoint = function(ctx,x,y) {
 
     ctx.restore();
 };
+
+var drawBoySprite1 = function(ctx,x,y,frame,dirEnum,size) {
+    // console.log(`drawBoySprite x${x} y${y} size${size}`);
+    var img = document.getElementById('boy');
+    // var frame = 0;
+    // var dirEnum = 0;
+    // var size = 22;
+    var boy_w = 400, boy_h = 600;
+    ctx.drawImage(img, boy_w*frame, boy_h*dirEnum, boy_w,boy_h, x-size/2,y-size/2, size,size);
+}

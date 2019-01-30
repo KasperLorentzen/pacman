@@ -102,13 +102,21 @@ var homeState = (function(){
         frame %= 4;
         return frame;
     };
-    menu.addTextIconButton(getGameName(GAME_PACMAN),
+    // menu.addTextIconButton(getGameName(GAME_PACMAN),
+    //     function() {
+    //         gameMode = GAME_PACMAN;
+    //         exitTo(preNewGameState);
+    //     },
+    //     function(ctx,x,y,frame) {
+    //         atlas.drawPacmanSprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame));
+    //     });
+    menu.addTextIconButton(getGameName(GAME_ATARIWOMAN),
         function() {
-            gameMode = GAME_PACMAN;
+            gameMode = GAME_ATARIWOMAN;
             exitTo(preNewGameState);
         },
         function(ctx,x,y,frame) {
-            atlas.drawPacmanSprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame));
+            atlas.drawBoySprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame));
         });
     // menu.addTextIconButton(getGameName(GAME_MSPACMAN),
     //     function() {
@@ -1249,6 +1257,8 @@ var readyNewState = newChildObject(readyState, {
         }
         else if (gameMode == GAME_COOKIE) {
             setNextCookieMap();
+        } else if (gameMode == GAME_ATARIWOMAN) {
+            map = mapPacman;
         }
         map.resetCurrent();
         fruit.onNewLevel();

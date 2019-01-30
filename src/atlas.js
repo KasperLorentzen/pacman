@@ -4,7 +4,7 @@ var atlas = (function(){
     var canvas,ctx;
     var size = 22;
     var cols = 14; // has to be ONE MORE than intended to fix some sort of CHROME BUG (last cell always blank?)
-    var rows = 23; // Femtech added rows: 1
+    var rows = 27; // Femtech added rows: 1 (1s and 0s) + 4 (boy sprite)
 
     var creates = 0;
 
@@ -264,7 +264,21 @@ var atlas = (function(){
         row++;
         drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 0, "#33ffff"); }, row, 0);
         drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 1, "#33ffff"); }, row, 1);
-
+        
+        // Femtech add Boy sprite
+        var drawBoyCells = function(row,col,dir) {
+            var i;
+            for (i=0; i<4; i++) { // frame
+                drawAtCell(function(x,y) { drawBoySprite1(ctx, x,y, i, dir, size); }, row, col);
+                col++;
+            }
+        };
+        row++;
+        drawBoyCells(row, 0, 0); // DOWN
+        drawBoyCells(row, 4, 1); // UP
+        row++;
+        drawBoyCells(row, 0, 2); // LEFT
+        drawBoyCells(row, 4, 3); // RIGHT
     };
 
     var copyCellTo = function(row, col, destCtx, x, y,display) {
@@ -518,6 +532,27 @@ var atlas = (function(){
         copyCellTo(row,col,destCtx,x,y);
     };
 
+    var copyBoySprite = function(destCtx,x,y,dirEnum,frame) {
+        var row, col;
+        if (dirEnum == DIR_DOWN) {
+            row = 22;
+            col = frame;
+        } else if (dirEnum == DIR_UP) {
+            row = 22;
+            col = frame+4;
+        } else if (dirEnum == DIR_LEFT) {
+            row = 23;
+            col = frame;
+        } else if (dirEnum == DIR_RIGHT) {
+            row = 23;
+            col = frame+4;
+        }
+        if (col != undefined) {
+            copyCellTo(row, col, destCtx, x, y);
+        }
+    };
+
+
     return {
         create: create,
         getCanvas: function() { return canvas; },
@@ -535,5 +570,6 @@ var atlas = (function(){
         drawMsPacFruitPoints: copyMsPacFruitPoints,
         drawSnail: copySnail,
         drawFemtechDots: copyFemtechDots,
+        drawBoySprite: copyBoySprite,
     };
 })();
