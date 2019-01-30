@@ -166,6 +166,7 @@ var GAME_PACMAN = 0;
 var GAME_MSPACMAN = 1;
 var GAME_COOKIE = 2;
 var GAME_OTTO = 3;
+var GAME_ATARIWOMAN = 4;
 
 var practiceMode = false;
 var turboMode = false;
@@ -174,7 +175,7 @@ var turboMode = false;
 var gameMode = GAME_PACMAN;
 var getGameName = (function(){
 
-    var names = ["PAC-MAN", "MS PAC-MAN", "COOKIE-MAN","CRAZY OTTO"];
+    var names = ["PAC-MAN", "MS PAC-MAN", "COOKIE-MAN","CRAZY OTTO", "ATARI WOMAN"];
     
     return function(mode) {
         if (mode == undefined) {
@@ -230,6 +231,18 @@ var getGameDescription = (function(){
             "REMAKE:",
             "SHAUN WILLIAMS",
         ],
+        [
+            "THE FEMTECH REMAKE OF:",
+            "PAC-MAN: ATARI WOMAN",
+            "2019",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "REMAKE:",
+            "KASPER LORENTZEN",
+        ],
     ];
     
     return function(mode) {
@@ -255,6 +268,9 @@ var getGhostNames = function(mode) {
     }
     else if (mode == GAME_COOKIE) {
         return ["elmo","piggy","rosita","zoe"];
+    }
+    else if (mode == GAME_ATARIWOMAN) {
+        return ["blinky","pinky","inky","sue"];
     }
 };
 
@@ -289,6 +305,9 @@ var getPlayerDrawFunc = function(mode) {
     else if (mode == GAME_COOKIE) {
         //return atlas.drawCookiemanSprite;
         return drawCookiemanSprite;
+    }
+    else if (mode == GAME_ATARIWOMAN) {
+        return atlas.drawBoySprite;
     }
 };
 
@@ -365,12 +384,14 @@ var scores = [
     0,0, // mspac
     0,0, // cookie
     0,0, // otto
+    0,0, // Atari Woman
     0 ];
 var highScores = [
     10000,10000, // pacman
     10000,10000, // mspac
     10000,10000, // cookie
     10000,10000, // otto
+    10000,10000, // Atari Woman
     ];
 
 var getScoreIndex = function() {
@@ -2534,7 +2555,7 @@ var atlas = (function(){
     var canvas,ctx;
     var size = 22;
     var cols = 14; // has to be ONE MORE than intended to fix some sort of CHROME BUG (last cell always blank?)
-    var rows = 23; // Femtech added rows: 1
+    var rows = 27; // Femtech added rows: 1 (1s and 0s) + 4 (boy sprite)
 
     var creates = 0;
 
@@ -2794,7 +2815,21 @@ var atlas = (function(){
         row++;
         drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 0, "#33ffff"); }, row, 0);
         drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 1, "#33ffff"); }, row, 1);
-
+        
+        // Femtech add Boy sprite
+        var drawBoyCells = function(row,col,dir) {
+            var i;
+            for (i=0; i<4; i++) { // frame
+                drawAtCell(function(x,y) { drawBoySprite1(ctx, x,y, i, dir, size); }, row, col);
+                col++;
+            }
+        };
+        row++;
+        drawBoyCells(row, 0, 0); // DOWN
+        drawBoyCells(row, 4, 1); // UP
+        row++;
+        drawBoyCells(row, 0, 2); // LEFT
+        drawBoyCells(row, 4, 3); // RIGHT
     };
 
     var copyCellTo = function(row, col, destCtx, x, y,display) {
@@ -3048,6 +3083,27 @@ var atlas = (function(){
         copyCellTo(row,col,destCtx,x,y);
     };
 
+    var copyBoySprite = function(destCtx,x,y,dirEnum,frame) {
+        var row, col;
+        if (dirEnum == DIR_DOWN) {
+            row = 22;
+            col = frame;
+        } else if (dirEnum == DIR_UP) {
+            row = 22;
+            col = frame+4;
+        } else if (dirEnum == DIR_LEFT) {
+            row = 23;
+            col = frame;
+        } else if (dirEnum == DIR_RIGHT) {
+            row = 23;
+            col = frame+4;
+        }
+        if (col != undefined) {
+            copyCellTo(row, col, destCtx, x, y);
+        }
+    };
+
+
     return {
         create: create,
         getCanvas: function() { return canvas; },
@@ -3065,6 +3121,7 @@ var atlas = (function(){
         drawMsPacFruitPoints: copyMsPacFruitPoints,
         drawSnail: copySnail,
         drawFemtechDots: copyFemtechDots,
+        drawBoySprite: copyBoySprite,
     };
 })();
 //@line 1 "src/renderers.js"
@@ -7412,7 +7469,16 @@ var drawExclamationPoint = function(ctx,x,y) {
 
     ctx.restore();
 };
-//@line 1 "src/Actor.js"
+
+var drawBoySprite1 = function(ctx,x,y,frame,dirEnum,size) {
+    // console.log(`drawBoySprite x${x} y${y} size${size}`);
+    var img = document.getElementById('boy');
+    // var frame = 0;
+    // var dirEnum = 0;
+    // var size = 22;
+    var boy_w = 400, boy_h = 600;
+    ctx.drawImage(img, boy_w*frame, boy_h*dirEnum, boy_w,boy_h, x-size/2,y-size/2, size,size);
+}//@line 1 "src/Actor.js"
 //////////////////////////////////////////////////////////////////////////////////////
 // The actor class defines common data functions for the ghosts and pacman
 // It provides everything for updating position and direction.
@@ -9638,13 +9704,21 @@ var homeState = (function(){
         frame %= 4;
         return frame;
     };
-    menu.addTextIconButton(getGameName(GAME_PACMAN),
+    // menu.addTextIconButton(getGameName(GAME_PACMAN),
+    //     function() {
+    //         gameMode = GAME_PACMAN;
+    //         exitTo(preNewGameState);
+    //     },
+    //     function(ctx,x,y,frame) {
+    //         atlas.drawPacmanSprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame));
+    //     });
+    menu.addTextIconButton(getGameName(GAME_ATARIWOMAN),
         function() {
-            gameMode = GAME_PACMAN;
+            gameMode = GAME_ATARIWOMAN;
             exitTo(preNewGameState);
         },
         function(ctx,x,y,frame) {
-            atlas.drawPacmanSprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame));
+            atlas.drawBoySprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame));
         });
     // menu.addTextIconButton(getGameName(GAME_MSPACMAN),
     //     function() {
@@ -10785,6 +10859,8 @@ var readyNewState = newChildObject(readyState, {
         }
         else if (gameMode == GAME_COOKIE) {
             setNextCookieMap();
+        } else if (gameMode == GAME_ATARIWOMAN) {
+            map = mapPacman;
         }
         map.resetCurrent();
         fruit.onNewLevel();
