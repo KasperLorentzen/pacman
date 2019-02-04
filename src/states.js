@@ -110,9 +110,9 @@ var homeState = (function(){
     //     function(ctx,x,y,frame) {
     //         atlas.drawPacmanSprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame));
     //     });
-    menu.addTextIconButton(getGameName(GAME_ATARIWOMAN),
+    menu.addTextIconButton(getGameName(GAME_ATARIWOMEN),
         function() {
-            gameMode = GAME_ATARIWOMAN;
+            gameMode = GAME_ATARIWOMEN;
             exitTo(preNewGameState);
         },
         function(ctx,x,y,frame) {
@@ -1257,7 +1257,7 @@ var readyNewState = newChildObject(readyState, {
         }
         else if (gameMode == GAME_COOKIE) {
             setNextCookieMap();
-        } else if (gameMode == GAME_ATARIWOMAN) {
+        } else if (gameMode == GAME_ATARIWOMEN) {
             map = mapPacman;
         }
         map.resetCurrent();

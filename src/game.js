@@ -6,7 +6,7 @@ var GAME_PACMAN = 0;
 var GAME_MSPACMAN = 1;
 var GAME_COOKIE = 2;
 var GAME_OTTO = 3;
-var GAME_ATARIWOMAN = 4;
+var GAME_ATARIWOMEN = 4;
 
 var practiceMode = false;
 var turboMode = false;
@@ -15,7 +15,7 @@ var turboMode = false;
 var gameMode = GAME_PACMAN;
 var getGameName = (function(){
 
-    var names = ["PAC-MAN", "MS PAC-MAN", "COOKIE-MAN","CRAZY OTTO", "ATARI WOMAN"];
+    var names = ["PAC-MAN", "MS PAC-MAN", "COOKIE-MAN","CRAZY OTTO", "ATARI WOMEN"];
     
     return function(mode) {
         if (mode == undefined) {
@@ -73,7 +73,7 @@ var getGameDescription = (function(){
         ],
         [
             "THE FEMTECH REMAKE OF:",
-            "PAC-MAN: ATARI WOMAN",
+            "PAC-MAN: ATARI WOMEN",
             "2019",
             "",
             "",
@@ -109,7 +109,7 @@ var getGhostNames = function(mode) {
     else if (mode == GAME_COOKIE) {
         return ["elmo","piggy","rosita","zoe"];
     }
-    else if (mode == GAME_ATARIWOMAN) {
+    else if (mode == GAME_ATARIWOMEN) {
         return ["blinky","pinky","inky","sue"];
     }
 };
@@ -146,7 +146,7 @@ var getPlayerDrawFunc = function(mode) {
         //return atlas.drawCookiemanSprite;
         return drawCookiemanSprite;
     }
-    else if (mode == GAME_ATARIWOMAN) {
+    else if (mode == GAME_ATARIWOMEN) {
         return atlas.drawBoySprite;
     }
 };

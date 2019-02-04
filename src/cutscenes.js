@@ -1080,6 +1080,7 @@ var cutscenes = [
     [mspacmanCutscene1, mspacmanCutscene2], // GAME_MSPACMAN
     [cookieCutscene1, cookieCutscene2], // GAME_COOKIE
     [mspacmanCutscene1, mspacmanCutscene2], // GAME_OTTO
+    [pacmanCutscene1], // ATARI_WOMEN
 ];
 
 var isInCutScene = function() {
