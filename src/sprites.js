@@ -2553,11 +2553,25 @@ var drawExclamationPoint = function(ctx,x,y) {
 };
 
 var drawBoySprite1 = function(ctx,x,y,frame,dirEnum,size) {
-    // console.log(`drawBoySprite x${x} y${y} size${size}`);
     var img = document.getElementById('boy');
-    // var frame = 0;
-    // var dirEnum = 0;
-    // var size = 22;
     var boy_w = 400, boy_h = 600;
     ctx.drawImage(img, boy_w*frame, boy_h*dirEnum, boy_w,boy_h, x-size/2,y-size/2, size,size);
 }
+
+var drawAtariWomenLogo = function(ctx,x,y,size) {
+    var img = document.getElementById('atariWomenLogo');
+    var img_w = 2004, img_h = 1893;
+    ctx.drawImage(img, 0,0, img_w,img_h, x-size/2,y-size/2, size,size);
+}
+
+var drawGraceBugGhost = function(ctx,x,y,frame,dir,size) {
+		var img = document.getElementById('bugGhost');
+		var sprite_margin = 28;
+		var sprite_size = 154 + sprite_margin*2;
+		var start_x = 244 - sprite_margin, start_y = 378 - sprite_margin;
+		var frame_x = frame*sprite_size;
+		var dir_x = dir*sprite_size*2;
+		var mod_x = frame_x + dir_x;
+    ctx.drawImage(img,start_x+mod_x,start_y,sprite_size,sprite_size,x-size/2,y-size/2,size,size);
+}
+

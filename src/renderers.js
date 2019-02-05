@@ -882,10 +882,15 @@ var initRenderer = function(){
                 bgCtx.translate(-0.5, -0.5);
             }
             else if (tile == 'o') {
-                bgCtx.fillStyle = map.pelletColor;
-                bgCtx.beginPath();
-                bgCtx.arc(x*tileSize+midTile.x+0.5,y*tileSize+midTile.y,this.energizerSize/2,0,Math.PI*2);
-                bgCtx.fill();
+                // Femtech
+                var tx = x*tileSize+midTile.x;
+                var ty = y*tileSize+midTile.y;
+                atlas.drawAtariWomenLogo(bgCtx,tx,ty);
+
+                // bgCtx.fillStyle = map.pelletColor;
+                // bgCtx.beginPath();
+                // bgCtx.arc(x*tileSize+midTile.x+0.5,y*tileSize+midTile.y,this.energizerSize/2,0,Math.PI*2);
+                // bgCtx.fill();
             }
             if (!isTranslated) {
                 bgCtx.translate(-mapPad,-mapPad);

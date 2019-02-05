@@ -4,7 +4,8 @@ var atlas = (function(){
     var canvas,ctx;
     var size = 22;
     var cols = 14; // has to be ONE MORE than intended to fix some sort of CHROME BUG (last cell always blank?)
-    var rows = 27; // Femtech added rows: 1 (1s and 0s) + 4 (boy sprite)
+    var rows = 22+1+4+1+1; 
+    // Femtech added rows: 1 (1s and 0s) + 4 (boy sprite) + 1 (AtariWomenPill) + 1 (GraceBug)
 
     var creates = 0;
 
@@ -279,6 +280,20 @@ var atlas = (function(){
         row++;
         drawBoyCells(row, 0, 2); // LEFT
         drawBoyCells(row, 4, 3); // RIGHT
+
+        // Femtech AtariWomenPill
+        row++;
+        drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size); }, row, 0);
+
+        // Femtech GraceBugGhost
+        row++
+        var i, col=0, frame=0, dir=0;
+        for (i=0; i<8; i++) {
+          frame = col%2 == 0 ? 0 : 1;
+          dir = Math.floor(col/2);
+          drawAtCell(function(x,y) { drawGraceBugGhost(ctx, x,y, frame, dir, size); }, row, col);
+          col++;
+        }
     };
 
     var copyCellTo = function(row, col, destCtx, x, y,display) {
@@ -552,6 +567,43 @@ var atlas = (function(){
         }
     };
 
+    var copyAtariWomenLogo = function(destCtx,x,y) {
+        var row = 24, col = 0;
+        copyCellTo(row, col, destCtx, x, y);
+    }
+
+    var copyGraceBug = function(destCtx,x,y,frame,dirEnum,scared,flash,eyes_only,color) {
+      var row,col;
+      if (eyes_only) {
+          row = 5;
+          col = dirEnum;
+      }
+      else if (scared) {
+          row = 5;
+          col = flash ? 6 : 4;
+          col += frame;
+      }
+      else {
+          col = dirEnum*2 + frame;
+          if (color == blinky.color) {
+              row = 25;
+          }
+          else if (color == pinky.color) {
+              row = 2;
+          }
+          else if (color == inky.color) {
+              row = 3;
+          }
+          else if (color == clyde.color) {
+              row = 4;
+          }
+          else {
+              row = 5;
+          }
+      }
+
+      copyCellTo(row, col, destCtx, x, y);
+    };
 
     return {
         create: create,
@@ -571,5 +623,7 @@ var atlas = (function(){
         drawSnail: copySnail,
         drawFemtechDots: copyFemtechDots,
         drawBoySprite: copyBoySprite,
+        drawAtariWomenLogo: copyAtariWomenLogo,
+        drawAtariWomenGhosts: copyGraceBug,
     };
 })();

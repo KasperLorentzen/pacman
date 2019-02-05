@@ -72,16 +72,16 @@ var getGameDescription = (function(){
             "SHAUN WILLIAMS",
         ],
         [
-            "THE FEMTECH REMAKE OF:",
-            "PAC-MAN: ATARI WOMEN",
-            "2019",
+            "FEMTECH REMAKE OF PAC-MAN - 2019",
             "",
+            "CONCEPT & ART: PERNILLE BJORN,",
+            "DANIELA ROSNER, TORI TENG,",
+            "TANYA CHANG, MONINA NEOPOMUCENO,",
+            "ESTHER LIN, CARA PANGELINAN",
+            "CUTSCENE QUOTES BY:",
+            "DONA BAILEY",
             "",
-            "",
-            "",
-            "",
-            "REMAKE:",
-            "KASPER LORENTZEN",
+            "BY: KASPER LORENTZEN & SHAUN WILLIAMS",
         ],
     ];
     
@@ -110,7 +110,7 @@ var getGhostNames = function(mode) {
         return ["elmo","piggy","rosita","zoe"];
     }
     else if (mode == GAME_ATARIWOMEN) {
-        return ["blinky","pinky","inky","sue"];
+        return ["carol","carla","dona","suki"];
     }
 };
 
@@ -123,6 +123,9 @@ var getGhostDrawFunc = function(mode) {
     }
     else if (mode == GAME_COOKIE) {
         return atlas.drawMuppetSprite;
+    }
+    else if (mode == GAME_ATARIWOMEN) {
+        return atlas.drawAtariWomenGhosts;
     }
     else {
         return atlas.drawGhostSprite;

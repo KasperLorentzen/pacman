@@ -166,7 +166,7 @@ var GAME_PACMAN = 0;
 var GAME_MSPACMAN = 1;
 var GAME_COOKIE = 2;
 var GAME_OTTO = 3;
-var GAME_ATARIWOMAN = 4;
+var GAME_ATARIWOMEN = 4;
 
 var practiceMode = false;
 var turboMode = false;
@@ -175,7 +175,7 @@ var turboMode = false;
 var gameMode = GAME_PACMAN;
 var getGameName = (function(){
 
-    var names = ["PAC-MAN", "MS PAC-MAN", "COOKIE-MAN","CRAZY OTTO", "ATARI WOMAN"];
+    var names = ["PAC-MAN", "MS PAC-MAN", "COOKIE-MAN","CRAZY OTTO", "ATARI WOMEN"];
     
     return function(mode) {
         if (mode == undefined) {
@@ -232,16 +232,16 @@ var getGameDescription = (function(){
             "SHAUN WILLIAMS",
         ],
         [
-            "THE FEMTECH REMAKE OF:",
-            "PAC-MAN: ATARI WOMAN",
-            "2019",
+            "FEMTECH REMAKE OF PAC-MAN - 2019",
             "",
+            "CONCEPT & ART: PERNILLE BJORN,",
+            "DANIELA ROSNER, TORI TENG,",
+            "TANYA CHANG, MONINA NEOPOMUCENO,",
+            "ESTHER LIN, CARA PANGELINAN",
+            "CUTSCENE QUOTES BY:",
+            "DONA BAILEY",
             "",
-            "",
-            "",
-            "",
-            "REMAKE:",
-            "KASPER LORENTZEN",
+            "BY: KASPER LORENTZEN & SHAUN WILLIAMS",
         ],
     ];
     
@@ -269,8 +269,8 @@ var getGhostNames = function(mode) {
     else if (mode == GAME_COOKIE) {
         return ["elmo","piggy","rosita","zoe"];
     }
-    else if (mode == GAME_ATARIWOMAN) {
-        return ["blinky","pinky","inky","sue"];
+    else if (mode == GAME_ATARIWOMEN) {
+        return ["carol","carla","dona","suki"];
     }
 };
 
@@ -283,6 +283,9 @@ var getGhostDrawFunc = function(mode) {
     }
     else if (mode == GAME_COOKIE) {
         return atlas.drawMuppetSprite;
+    }
+    else if (mode == GAME_ATARIWOMEN) {
+        return atlas.drawAtariWomenGhosts;
     }
     else {
         return atlas.drawGhostSprite;
@@ -306,7 +309,7 @@ var getPlayerDrawFunc = function(mode) {
         //return atlas.drawCookiemanSprite;
         return drawCookiemanSprite;
     }
-    else if (mode == GAME_ATARIWOMAN) {
+    else if (mode == GAME_ATARIWOMEN) {
         return atlas.drawBoySprite;
     }
 };
@@ -2555,7 +2558,8 @@ var atlas = (function(){
     var canvas,ctx;
     var size = 22;
     var cols = 14; // has to be ONE MORE than intended to fix some sort of CHROME BUG (last cell always blank?)
-    var rows = 27; // Femtech added rows: 1 (1s and 0s) + 4 (boy sprite)
+    var rows = 22+1+4+1+1; 
+    // Femtech added rows: 1 (1s and 0s) + 4 (boy sprite) + 1 (AtariWomenPill) + 1 (GraceBug)
 
     var creates = 0;
 
@@ -2830,6 +2834,20 @@ var atlas = (function(){
         row++;
         drawBoyCells(row, 0, 2); // LEFT
         drawBoyCells(row, 4, 3); // RIGHT
+
+        // Femtech AtariWomenPill
+        row++;
+        drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size); }, row, 0);
+
+        // Femtech GraceBugGhost
+        row++
+        var i, col=0, frame=0, dir=0;
+        for (i=0; i<8; i++) {
+          frame = col%2 == 0 ? 0 : 1;
+          dir = Math.floor(col/2);
+          drawAtCell(function(x,y) { drawGraceBugGhost(ctx, x,y, frame, dir, size); }, row, col);
+          col++;
+        }
     };
 
     var copyCellTo = function(row, col, destCtx, x, y,display) {
@@ -3103,6 +3121,43 @@ var atlas = (function(){
         }
     };
 
+    var copyAtariWomenLogo = function(destCtx,x,y) {
+        var row = 24, col = 0;
+        copyCellTo(row, col, destCtx, x, y);
+    }
+
+    var copyGraceBug = function(destCtx,x,y,frame,dirEnum,scared,flash,eyes_only,color) {
+      var row,col;
+      if (eyes_only) {
+          row = 5;
+          col = dirEnum;
+      }
+      else if (scared) {
+          row = 5;
+          col = flash ? 6 : 4;
+          col += frame;
+      }
+      else {
+          col = dirEnum*2 + frame;
+          if (color == blinky.color) {
+              row = 25;
+          }
+          else if (color == pinky.color) {
+              row = 2;
+          }
+          else if (color == inky.color) {
+              row = 3;
+          }
+          else if (color == clyde.color) {
+              row = 4;
+          }
+          else {
+              row = 5;
+          }
+      }
+
+      copyCellTo(row, col, destCtx, x, y);
+    };
 
     return {
         create: create,
@@ -3122,6 +3177,8 @@ var atlas = (function(){
         drawSnail: copySnail,
         drawFemtechDots: copyFemtechDots,
         drawBoySprite: copyBoySprite,
+        drawAtariWomenLogo: copyAtariWomenLogo,
+        drawAtariWomenGhosts: copyGraceBug,
     };
 })();
 //@line 1 "src/renderers.js"
@@ -4009,10 +4066,15 @@ var initRenderer = function(){
                 bgCtx.translate(-0.5, -0.5);
             }
             else if (tile == 'o') {
-                bgCtx.fillStyle = map.pelletColor;
-                bgCtx.beginPath();
-                bgCtx.arc(x*tileSize+midTile.x+0.5,y*tileSize+midTile.y,this.energizerSize/2,0,Math.PI*2);
-                bgCtx.fill();
+                // Femtech
+                var tx = x*tileSize+midTile.x;
+                var ty = y*tileSize+midTile.y;
+                atlas.drawAtariWomenLogo(bgCtx,tx,ty);
+
+                // bgCtx.fillStyle = map.pelletColor;
+                // bgCtx.beginPath();
+                // bgCtx.arc(x*tileSize+midTile.x+0.5,y*tileSize+midTile.y,this.energizerSize/2,0,Math.PI*2);
+                // bgCtx.fill();
             }
             if (!isTranslated) {
                 bgCtx.translate(-mapPad,-mapPad);
@@ -7471,14 +7533,29 @@ var drawExclamationPoint = function(ctx,x,y) {
 };
 
 var drawBoySprite1 = function(ctx,x,y,frame,dirEnum,size) {
-    // console.log(`drawBoySprite x${x} y${y} size${size}`);
     var img = document.getElementById('boy');
-    // var frame = 0;
-    // var dirEnum = 0;
-    // var size = 22;
     var boy_w = 400, boy_h = 600;
     ctx.drawImage(img, boy_w*frame, boy_h*dirEnum, boy_w,boy_h, x-size/2,y-size/2, size,size);
-}//@line 1 "src/Actor.js"
+}
+
+var drawAtariWomenLogo = function(ctx,x,y,size) {
+    var img = document.getElementById('atariWomenLogo');
+    var img_w = 2004, img_h = 1893;
+    ctx.drawImage(img, 0,0, img_w,img_h, x-size/2,y-size/2, size,size);
+}
+
+var drawGraceBugGhost = function(ctx,x,y,frame,dir,size) {
+		var img = document.getElementById('bugGhost');
+		var sprite_margin = 28;
+		var sprite_size = 154 + sprite_margin*2;
+		var start_x = 244 - sprite_margin, start_y = 378 - sprite_margin;
+		var frame_x = frame*sprite_size;
+		var dir_x = dir*sprite_size*2;
+		var mod_x = frame_x + dir_x;
+    ctx.drawImage(img,start_x+mod_x,start_y,sprite_size,sprite_size,x-size/2,y-size/2,size,size);
+}
+
+//@line 1 "src/Actor.js"
 //////////////////////////////////////////////////////////////////////////////////////
 // The actor class defines common data functions for the ghosts and pacman
 // It provides everything for updating position and direction.
@@ -9448,7 +9525,7 @@ var setFruitFromGameMode = (function() {
     var mspacfruit = new MsPacFruit();
     fruit = pacfruit;
     return function() {
-        if (gameMode == GAME_PACMAN || GAME_ATARIWOMAN) {
+        if (gameMode == GAME_PACMAN || GAME_ATARIWOMEN) {
             fruit = pacfruit;
         }
         else {
@@ -9690,7 +9767,7 @@ var homeState = (function(){
         menu.disable();
     };
 
-    var menu = new Menu("CHOOSE A GAME",2*tileSize,0*tileSize,mapWidth-4*tileSize,3*tileSize,tileSize,tileSize+"px ArcadeR", "#EEE");
+    var menu = new Menu("FEMTECH PRESENTS",2*tileSize,0*tileSize,mapWidth-4*tileSize,3*tileSize,tileSize,tileSize+"px ArcadeR", "#EEE");
     var getIconAnimFrame = function(frame) {
         frame = Math.floor(frame/3)+1;
         frame %= 4;
@@ -9712,9 +9789,9 @@ var homeState = (function(){
     //     function(ctx,x,y,frame) {
     //         atlas.drawPacmanSprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame));
     //     });
-    menu.addTextIconButton(getGameName(GAME_ATARIWOMAN),
+    menu.addTextIconButton(getGameName(GAME_ATARIWOMEN),
         function() {
-            gameMode = GAME_ATARIWOMAN;
+            gameMode = GAME_ATARIWOMEN;
             exitTo(preNewGameState);
         },
         function(ctx,x,y,frame) {
@@ -9737,14 +9814,14 @@ var homeState = (function(){
     //         drawCookiemanSprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame), true);
     //     });
 
-    menu.addSpacer(0.5);
-    menu.addTextIconButton("LEARN",
-        function() {
-            exitTo(learnState);
-        },
-        function(ctx,x,y,frame) {
-            atlas.drawGhostSprite(ctx,x,y,Math.floor(frame/8)%2,DIR_RIGHT,false,false,false,blinky.color);
-        });
+    // menu.addSpacer(0.5);
+    // menu.addTextIconButton("LEARN",
+    //     function() {
+    //         exitTo(learnState);
+    //     },
+    //     function(ctx,x,y,frame) {
+    //         atlas.drawGhostSprite(ctx,x,y,Math.floor(frame/8)%2,DIR_RIGHT,false,false,false,blinky.color);
+    //     });
 
     return {
         init: function() {
@@ -10859,7 +10936,7 @@ var readyNewState = newChildObject(readyState, {
         }
         else if (gameMode == GAME_COOKIE) {
             setNextCookieMap();
-        } else if (gameMode == GAME_ATARIWOMAN) {
+        } else if (gameMode == GAME_ATARIWOMEN) {
             map = mapPacman;
         }
         map.resetCurrent();
@@ -12607,6 +12684,7 @@ var cutscenes = [
     [mspacmanCutscene1, mspacmanCutscene2], // GAME_MSPACMAN
     [cookieCutscene1, cookieCutscene2], // GAME_COOKIE
     [mspacmanCutscene1, mspacmanCutscene2], // GAME_OTTO
+    [pacmanCutscene1], // ATARI_WOMEN
 ];
 
 var isInCutScene = function() {
