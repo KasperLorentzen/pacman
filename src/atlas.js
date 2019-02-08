@@ -69,14 +69,22 @@ var atlas = (function(){
         };
 
         var row = 0;
-        drawAtCell(function(x,y) { drawCherry(ctx,x,y); },      row,0);
-        drawAtCell(function(x,y) { drawStrawberry(ctx,x,y); },  row,1);
-        drawAtCell(function(x,y) { drawOrange(ctx,x,y); },      row,2);
-        drawAtCell(function(x,y) { drawApple(ctx,x,y); },       row,3);
-        drawAtCell(function(x,y) { drawMelon(ctx,x,y); },       row,4);
-        drawAtCell(function(x,y) { drawGalaxian(ctx,x,y); },    row,5);
-        drawAtCell(function(x,y) { drawBell(ctx,x,y); },        row,6);
-        drawAtCell(function(x,y) { drawKey(ctx,x,y); },         row,7);
+        // Femtech atariwomen fruits
+        var drawFruits = function(row, size) {
+            var i;
+            for (i=0; i<8; i++) {
+                drawAtCell(function(x,y) { drawAtariWomenFruit(ctx,x,y,i,size); },row,i);
+            }
+        }
+        drawFruits(row, size);
+        // drawAtCell(function(x,y) { drawCherry(ctx,x,y); },      row,0);
+        // drawAtCell(function(x,y) { drawStrawberry(ctx,x,y); },  row,1);
+        // drawAtCell(function(x,y) { drawOrange(ctx,x,y); },      row,2);
+        // drawAtCell(function(x,y) { drawApple(ctx,x,y); },       row,3);
+        // drawAtCell(function(x,y) { drawMelon(ctx,x,y); },       row,4);
+        // drawAtCell(function(x,y) { drawGalaxian(ctx,x,y); },    row,5);
+        // drawAtCell(function(x,y) { drawBell(ctx,x,y); },        row,6);
+        // drawAtCell(function(x,y) { drawKey(ctx,x,y); },         row,7);
         drawAtCell(function(x,y) { drawPretzel(ctx,x,y); },     row,8);
         drawAtCell(function(x,y) { drawPear(ctx,x,y); },        row,9);
         drawAtCell(function(x,y) { drawBanana(ctx,x,y); },      row,10);
@@ -283,7 +291,7 @@ var atlas = (function(){
 
         // Femtech AtariWomenPill
         row++;
-        drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size); }, row, 0);
+        drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size-2); }, row, 0);
 
         // Femtech GraceBugGhost
         row++

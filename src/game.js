@@ -110,7 +110,7 @@ var getGhostNames = function(mode) {
         return ["elmo","piggy","rosita","zoe"];
     }
     else if (mode == GAME_ATARIWOMEN) {
-        return ["carol","carla","dona","suki"];
+        return ["XOR","OR","AND","NAND"];
     }
 };
 

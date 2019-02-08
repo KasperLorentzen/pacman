@@ -2560,8 +2560,7 @@ var drawBoySprite1 = function(ctx,x,y,frame,dirEnum,size) {
 
 var drawAtariWomenLogo = function(ctx,x,y,size) {
     var img = document.getElementById('atariWomenLogo');
-    var img_w = 2004, img_h = 1893;
-    ctx.drawImage(img, 0,0, img_w,img_h, x-size/2,y-size/2, size,size);
+    ctx.drawImage(img, 0,0, img.width,img.height, x-size/2,y-size/2, size,size);
 }
 
 var drawGraceBugGhost = function(ctx,x,y,frame,dir,size) {
@@ -2575,3 +2574,7 @@ var drawGraceBugGhost = function(ctx,x,y,frame,dir,size) {
     ctx.drawImage(img,start_x+mod_x,start_y,sprite_size,sprite_size,x-size/2,y-size/2,size,size);
 }
 
+var drawAtariWomenFruit = function(ctx,x,y,num,size) {
+    var img = document.getElementById(`fruit${num+1}`);
+    ctx.drawImage(img, 0,0, img.width,img.height, x-size/2,y-size/2, size,size);
+}

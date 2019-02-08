@@ -270,7 +270,7 @@ var getGhostNames = function(mode) {
         return ["elmo","piggy","rosita","zoe"];
     }
     else if (mode == GAME_ATARIWOMEN) {
-        return ["carol","carla","dona","suki"];
+        return ["XOR","OR","AND","NAND"];
     }
 };
 
@@ -2623,14 +2623,22 @@ var atlas = (function(){
         };
 
         var row = 0;
-        drawAtCell(function(x,y) { drawCherry(ctx,x,y); },      row,0);
-        drawAtCell(function(x,y) { drawStrawberry(ctx,x,y); },  row,1);
-        drawAtCell(function(x,y) { drawOrange(ctx,x,y); },      row,2);
-        drawAtCell(function(x,y) { drawApple(ctx,x,y); },       row,3);
-        drawAtCell(function(x,y) { drawMelon(ctx,x,y); },       row,4);
-        drawAtCell(function(x,y) { drawGalaxian(ctx,x,y); },    row,5);
-        drawAtCell(function(x,y) { drawBell(ctx,x,y); },        row,6);
-        drawAtCell(function(x,y) { drawKey(ctx,x,y); },         row,7);
+        // Femtech atariwomen fruits
+        var drawFruits = function(row, size) {
+            var i;
+            for (i=0; i<8; i++) {
+                drawAtCell(function(x,y) { drawAtariWomenFruit(ctx,x,y,i,size); },row,i);
+            }
+        }
+        drawFruits(row, size);
+        // drawAtCell(function(x,y) { drawCherry(ctx,x,y); },      row,0);
+        // drawAtCell(function(x,y) { drawStrawberry(ctx,x,y); },  row,1);
+        // drawAtCell(function(x,y) { drawOrange(ctx,x,y); },      row,2);
+        // drawAtCell(function(x,y) { drawApple(ctx,x,y); },       row,3);
+        // drawAtCell(function(x,y) { drawMelon(ctx,x,y); },       row,4);
+        // drawAtCell(function(x,y) { drawGalaxian(ctx,x,y); },    row,5);
+        // drawAtCell(function(x,y) { drawBell(ctx,x,y); },        row,6);
+        // drawAtCell(function(x,y) { drawKey(ctx,x,y); },         row,7);
         drawAtCell(function(x,y) { drawPretzel(ctx,x,y); },     row,8);
         drawAtCell(function(x,y) { drawPear(ctx,x,y); },        row,9);
         drawAtCell(function(x,y) { drawBanana(ctx,x,y); },      row,10);
@@ -2837,7 +2845,7 @@ var atlas = (function(){
 
         // Femtech AtariWomenPill
         row++;
-        drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size); }, row, 0);
+        drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size-2); }, row, 0);
 
         // Femtech GraceBugGhost
         row++
@@ -7540,8 +7548,7 @@ var drawBoySprite1 = function(ctx,x,y,frame,dirEnum,size) {
 
 var drawAtariWomenLogo = function(ctx,x,y,size) {
     var img = document.getElementById('atariWomenLogo');
-    var img_w = 2004, img_h = 1893;
-    ctx.drawImage(img, 0,0, img_w,img_h, x-size/2,y-size/2, size,size);
+    ctx.drawImage(img, 0,0, img.width,img.height, x-size/2,y-size/2, size,size);
 }
 
 var drawGraceBugGhost = function(ctx,x,y,frame,dir,size) {
@@ -7555,6 +7562,10 @@ var drawGraceBugGhost = function(ctx,x,y,frame,dir,size) {
     ctx.drawImage(img,start_x+mod_x,start_y,sprite_size,sprite_size,x-size/2,y-size/2,size,size);
 }
 
+var drawAtariWomenFruit = function(ctx,x,y,num,size) {
+    var img = document.getElementById(`fruit${num+1}`);
+    ctx.drawImage(img, 0,0, img.width,img.height, x-size/2,y-size/2, size,size);
+}
 //@line 1 "src/Actor.js"
 //////////////////////////////////////////////////////////////////////////////////////
 // The actor class defines common data functions for the ghosts and pacman
