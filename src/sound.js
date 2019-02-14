@@ -51,9 +51,9 @@ function audioTrack(url, volume) {
 
 
 function preloadAudio() {
-
+    // Femtech sound changes
     this.credit            = new audioTrack('sounds/credit.mp3');
-    this.coffeeBreakMusic  = new audioTrack('sounds/coffee-break-music.mp3');
+    this.coffeeBreakMusic  = new audioTrack('sounds/sound1.mp3'); // new audioTrack('sounds/coffee-break-music.mp3');
     this.die               = new audioTrack('sounds/miss.mp3');
     this.ghostReturnToHome = new audioTrack('sounds/ghost-return-to-home.mp3');
     this.eatingGhost       = new audioTrack('sounds/eating-ghost.mp3');
@@ -63,10 +63,10 @@ function preloadAudio() {
     this.ghostSpurtMove2   = new audioTrack('sounds/ghost-spurt-move-2.mp3');
     this.ghostSpurtMove3   = new audioTrack('sounds/ghost-spurt-move-3.mp3');
     this.ghostSpurtMove4   = new audioTrack('sounds/ghost-spurt-move-4.mp3');
-    this.ghostNormalMove   = new audioTrack('sounds/ghost-normal-move.mp3');
+    this.ghostNormalMove   = new audioTrack('sounds/sound3.mp3'); // new audioTrack('sounds/ghost-normal-move.mp3');
     this.extend            = new audioTrack('sounds/extend.mp3');
     this.eating            = new audioTrack('sounds/eating.mp3', 0.5);
-    this.startMusic        = new audioTrack('sounds/start-music.mp3');
+    this.startMusic        = new audioTrack('sounds/sound2.mp3'); // new audioTrack('sounds/start-music.mp3');
 
     this.ghostReset = function(noResetTime) {
         for (var s in this) {
