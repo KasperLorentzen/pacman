@@ -274,20 +274,20 @@ var atlas = (function(){
         drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 0, "#33ffff"); }, row, 0);
         drawAtCell(function(x,y) { drawPacPoints(ctx, x,y, 1, "#33ffff"); }, row, 1);
         
-        // Femtech add Boy sprite
-        var drawBoyCells = function(row,col,dir) {
+        // Femtech add Atari Woman sprite
+        var drawAtariWomanCells = function(row,col,dir) {
             var i;
             for (i=0; i<4; i++) { // frame
-                drawAtCell(function(x,y) { drawBoySprite1(ctx, x,y, i, dir, size); }, row, col);
+                drawAtCell(function(x,y) { drawAtariWoman(ctx, x,y, i, dir, size); }, row, col);
                 col++;
             }
         };
         row++;
-        drawBoyCells(row, 0, 0); // DOWN
-        drawBoyCells(row, 4, 1); // UP
+        drawAtariWomanCells(row, 0, 0); // DOWN
+        drawAtariWomanCells(row, 4, 1); // UP
         row++;
-        drawBoyCells(row, 0, 2); // LEFT
-        drawBoyCells(row, 4, 3); // RIGHT
+        drawAtariWomanCells(row, 0, 2); // LEFT
+        drawAtariWomanCells(row, 4, 3); // RIGHT
 
         // Femtech AtariWomenPill
         row++;
