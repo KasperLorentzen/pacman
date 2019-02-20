@@ -291,7 +291,7 @@ var atlas = (function(){
 
         // Femtech AtariWomenPill
         row++;
-        drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size-2); }, row, 0);
+        drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size*0.75); }, row, 0);
 
         // Femtech GraceBugGhost
         row++
@@ -555,17 +555,17 @@ var atlas = (function(){
         copyCellTo(row,col,destCtx,x,y);
     };
 
-    var copyBoySprite = function(destCtx,x,y,dirEnum,frame) {
+    var copyWomanSprite = function(destCtx,x,y,dirEnum,frame) {
         var row, col;
         if (dirEnum == DIR_DOWN) {
-            row = 22;
+            row = 23;
             col = frame;
         } else if (dirEnum == DIR_UP) {
             row = 22;
-            col = frame+4;
-        } else if (dirEnum == DIR_LEFT) {
-            row = 23;
             col = frame;
+        } else if (dirEnum == DIR_LEFT) {
+            row = 22;
+            col = frame+4;
         } else if (dirEnum == DIR_RIGHT) {
             row = 23;
             col = frame+4;
@@ -630,7 +630,7 @@ var atlas = (function(){
         drawMsPacFruitPoints: copyMsPacFruitPoints,
         drawSnail: copySnail,
         drawFemtechDots: copyFemtechDots,
-        drawBoySprite: copyBoySprite,
+        drawAtariWoman: copyWomanSprite,
         drawAtariWomenLogo: copyAtariWomenLogo,
         drawAtariWomenGhosts: copyGraceBug,
     };

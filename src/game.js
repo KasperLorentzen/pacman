@@ -150,7 +150,7 @@ var getPlayerDrawFunc = function(mode) {
         return drawCookiemanSprite;
     }
     else if (mode == GAME_ATARIWOMEN) {
-        return atlas.drawBoySprite;
+        return atlas.drawAtariWoman;
     }
 };
 

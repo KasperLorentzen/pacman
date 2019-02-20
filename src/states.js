@@ -116,7 +116,7 @@ var homeState = (function(){
             exitTo(preNewGameState);
         },
         function(ctx,x,y,frame) {
-            atlas.drawBoySprite(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame));
+            atlas.drawAtariWoman(ctx,x,y,DIR_RIGHT,getIconAnimFrame(frame));
         });
     // menu.addTextIconButton(getGameName(GAME_MSPACMAN),
     //     function() {

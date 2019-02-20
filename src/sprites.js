@@ -2552,12 +2552,6 @@ var drawExclamationPoint = function(ctx,x,y) {
     ctx.restore();
 };
 
-var drawBoySprite1 = function(ctx,x,y,frame,dirEnum,size) {
-    var img = document.getElementById('boy');
-    var boy_w = 400, boy_h = 600;
-    ctx.drawImage(img, boy_w*frame, boy_h*dirEnum, boy_w,boy_h, x-size/2,y-size/2, size,size);
-}
-
 var drawAtariWomenLogo = function(ctx,x,y,size) {
     var img = document.getElementById('atariWomenLogo');
     ctx.drawImage(img, 0,0, img.width,img.height, x-size/2,y-size/2, size,size);
@@ -2579,30 +2573,28 @@ var drawAtariWomenFruit = function(ctx,x,y,num,size) {
     ctx.drawImage(img, 0,0, img.width,img.height, x-size/2,y-size/2, size,size);
 }
 
-var drawAtariWoman = function(ctx,dest_x,dest_y,frame,dirEnum,size) {
+var drawAtariWoman = function(ctx,dest_x,dest_y,frame,dirEnum,tileSize) {
+	console.log(!!ctx, dest_x, dest_y, dirEnum, frame);
 	var img = document.getElementById('atariWoman');
 	var x, y, w, h;
+	var size = tileSize * 0.75;
 	if (dirEnum === DIR_DOWN) {
 		switch (frame) {
 			case 0:
 				// woman01 = 111 0 35 39
 				x = 111, y = 0, w = 35, h = 39;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 1:
 				// woman02 = 147 0 35 39
 				x = 147, y = 0, w = 35, h = 39;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 2:
 				// woman03 = 74 0 36 39
 				x = 74, y = 0, w = 36, h = 39;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 3:
 				// woman04 = 0 41 36 39
 				x = 0, y = 41, w = 36, h = 39;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 		}
 	} else if (dirEnum === DIR_UP) {
@@ -2610,22 +2602,18 @@ var drawAtariWoman = function(ctx,dest_x,dest_y,frame,dirEnum,size) {
 			case 0:
 				// woman05 = 0 81 35 40
 				x = 0, y = 81, w = 35, h = 40;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 1:
 				// woman06 = 74 40 35 40
 				x = 74, y = 40, w = 35, h = 40;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 2:
 				// woman07 = 0 0 36 40
 				x = 0, y = 0, w = 36, h = 40;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 3:
 				// woman08 = 37 0 36 40
 				x = 37, y = 0, w = 36, h = 40;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 		}
 	} else if (dirEnum === DIR_LEFT) {
@@ -2633,22 +2621,18 @@ var drawAtariWoman = function(ctx,dest_x,dest_y,frame,dirEnum,size) {
 			case 0:
 				// woman09 = 183 0 30 40
 				x = 183, y = 0, w = 30, h = 40;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 1:
 				// woman10 = 36 81 35 40
 				x = 36, y = 81, w = 35, h = 40;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 2:
 				// woman11 = 146 40 30 40
 				x = 146, y = 40, w = 30, h = 40;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 3:
 				// woman12 = 72 81 35 40
 				x = 72, y = 81, w = 35, h = 40;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 		}
 	} else if (dirEnum === DIR_RIGHT) {
@@ -2656,23 +2640,21 @@ var drawAtariWoman = function(ctx,dest_x,dest_y,frame,dirEnum,size) {
 			case 0:
 				// woman13 = 110 40 35 39
 				x = 110, y = 40, w = 35, h = 39;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 1:
 				// woman14 = 108 81 30 39
 				x = 108, y = 81, w = 30, h = 39;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 2:
 				// woman15 = 37 41 36 39
 				x = 37, y = 41, w = 36, h = 39;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 			case 3:
 				// woman16 = 214 0 30 39
 				x = 214, y = 0, w = 30, h = 39;
-				ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 				break;
 		}
 	}
+	console.log(!!img,x,y,w,h);
+	ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 }
