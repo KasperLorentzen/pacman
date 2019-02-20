@@ -240,7 +240,7 @@ var getGameDescription = (function(){
             "ESTHER LIN, CARA PANGELINAN",
             "CUTSCENE QUOTES BY:",
             "DONA BAILEY",
-            "",
+            "Music: Patricia Goodson",
             "BY: KASPER LORENTZEN & SHAUN WILLIAMS",
         ],
     ];
@@ -283,9 +283,6 @@ var getGhostDrawFunc = function(mode) {
     }
     else if (mode == GAME_COOKIE) {
         return atlas.drawMuppetSprite;
-    }
-    else if (mode == GAME_ATARIWOMEN) {
-        return atlas.drawAtariWomenGhosts;
     }
     else {
         return atlas.drawGhostSprite;
@@ -2645,25 +2642,39 @@ var atlas = (function(){
         drawAtCell(function(x,y) { drawCookie(ctx,x,y); },      row,11);
         drawAtCell(function(x,y) { drawCookieFlash(ctx,x,y); },      row,12);
 
-        var drawGhostCells = function(row,color) {
-            var i,f;
-            var col = 0;
-            for (i=0; i<4; i++) { // dirEnum
-                for (f=0; f<2; f++) { // frame
-                    drawAtCell(function(x,y) { drawGhostSprite(ctx, x,y, f, i, false, false, false, color); },   row,col);
-                    col++;
-                }
-            }
-        };
+        // var drawGhostCells = function(row,color) {
+        //     var i,f;
+        //     var col = 0;
+        //     for (i=0; i<4; i++) { // dirEnum
+        //         for (f=0; f<2; f++) { // frame
+        //             drawAtCell(function(x,y) { drawGhostSprite(ctx, x,y, f, i, false, false, false, color); },   row,col);
+        //             col++;
+        //         }
+        //     }
+        // };
 
-        row++;
-        drawGhostCells(row, "#FF0000");
-        row++;
-        drawGhostCells(row, "#FFB8FF");
-        row++;
-        drawGhostCells(row, "#00FFFF");
-        row++;
-        drawGhostCells(row, "#FFB851");
+        // row++;
+        // drawGhostCells(row, "#FF0000");
+        // row++;
+        // drawGhostCells(row, "#FFB8FF");
+        // row++;
+        // drawGhostCells(row, "#00FFFF");
+        // row++;
+        // drawGhostCells(row, "#FFB851");
+				// Femtech MothGhosts
+				var drawAtariMothCells = function(row,moth) {
+					var i, frame=0, dir=0, col=0;
+					for (i=0; i<8; i++) { // frame
+						frame = col%2 == 0 ? 0 : 1;
+						dir = Math.floor(col/2);
+						drawAtCell(function(x,y) { drawAtariMoth(ctx, x,y, frame, dir, size, moth); }, row, col);
+						col++;
+					}
+				};
+				for (i=0;i<4;i++) {
+					row++;
+					drawAtariMothCells(row, i);
+				}
 
         row++;
         // draw disembodied eyes
@@ -2847,15 +2858,17 @@ var atlas = (function(){
         row++;
         drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size*0.75); }, row, 0);
 
-        // Femtech GraceBugGhost
-        row++
-        var i, col=0, frame=0, dir=0;
-        for (i=0; i<8; i++) {
-          frame = col%2 == 0 ? 0 : 1;
-          dir = Math.floor(col/2);
-          drawAtCell(function(x,y) { drawGraceBugGhost(ctx, x,y, frame, dir, size); }, row, col);
-          col++;
-        }
+        // // Femtech GraceBugGhost
+        // row++
+        // var i, col=0, frame=0, dir=0;
+        // for (i=0; i<8; i++) {
+        //   frame = col%2 == 0 ? 0 : 1;
+        //   dir = Math.floor(col/2);
+        //   drawAtCell(function(x,y) { drawGraceBugGhost(ctx, x,y, frame, dir, size); }, row, col);
+        //   col++;
+				// }
+				
+		
     };
 
     var copyCellTo = function(row, col, destCtx, x, y,display) {
@@ -3134,39 +3147,6 @@ var atlas = (function(){
         copyCellTo(row, col, destCtx, x, y);
     }
 
-    var copyGraceBug = function(destCtx,x,y,frame,dirEnum,scared,flash,eyes_only,color) {
-      var row,col;
-      if (eyes_only) {
-          row = 5;
-          col = dirEnum;
-      }
-      else if (scared) {
-          row = 5;
-          col = flash ? 6 : 4;
-          col += frame;
-      }
-      else {
-          col = dirEnum*2 + frame;
-          if (color == blinky.color) {
-              row = 25;
-          }
-          else if (color == pinky.color) {
-              row = 2;
-          }
-          else if (color == inky.color) {
-              row = 3;
-          }
-          else if (color == clyde.color) {
-              row = 4;
-          }
-          else {
-              row = 5;
-          }
-      }
-
-      copyCellTo(row, col, destCtx, x, y);
-    };
-
     return {
         create: create,
         getCanvas: function() { return canvas; },
@@ -3186,7 +3166,6 @@ var atlas = (function(){
         drawFemtechDots: copyFemtechDots,
         drawAtariWoman: copyWomanSprite,
         drawAtariWomenLogo: copyAtariWomenLogo,
-        drawAtariWomenGhosts: copyGraceBug,
     };
 })();
 //@line 1 "src/renderers.js"
@@ -7644,6 +7623,83 @@ var drawAtariWoman = function(ctx,dest_x,dest_y,frame,dirEnum,tileSize) {
 		}
 	}
 	//console.log(!!img,x,y,w,h);
+	ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
+}
+
+var drawAtariMoth = function(ctx,dest_x,dest_y,frame,dirEnum,tileSize, moth) {
+	var img = document.getElementById('moth');
+	var mothArray = [
+		76, 64, 37, 31,
+		128, 128, 31, 34,
+		223, 0, 31, 38,
+		155, 0, 33, 31,
+		39, 0, 38, 31,
+		192, 128, 31, 33,
+		0, 98, 31, 38,
+		114, 64, 33, 31,
+		0, 65, 37, 32,
+		96, 167, 31, 34,
+		32, 98, 31, 38,
+		155, 32, 33, 31,
+		39, 32, 38, 31,
+		160, 163, 31, 33,
+		0, 137, 31, 38,
+		189, 0, 33, 31,
+		76, 96, 37, 31,
+		128, 198, 31, 33,
+		32, 137, 31, 38,
+		114, 96, 33, 31,
+		0, 0, 38, 32,
+		64, 206, 31, 34,
+		0, 176, 31, 38,
+		148, 64, 33, 31,
+		117, 0, 37, 31,
+		224, 128, 31, 33,
+		64, 128, 31, 38,
+		189, 32, 33, 31,
+		78, 0, 38, 31,
+		160, 128, 31, 34,
+		32, 176, 31, 38,
+		148, 96, 33, 31,
+		117, 32, 37, 31,
+		128, 163, 31, 34,
+		0, 215, 31, 38,
+		182, 64, 33, 31,
+		78, 32, 38, 31,
+		192, 162, 31, 33,
+		96, 128, 31, 38,
+		182, 96, 33, 31,
+		38, 65, 37, 32,
+		96, 202, 31, 34,
+		64, 167, 31, 38,
+		216, 64, 33, 31,
+		0, 33, 38, 31,
+		160, 197, 31, 33,
+		32, 215, 31, 38,
+		216, 96, 33, 31,
+		223, 39, 21, 17,
+		228, 201, 16, 17,
+		224, 162, 17, 21,
+		180, 235, 17, 15,
+		96, 237, 21, 17,
+		198, 235, 16, 17,
+		192, 196, 17, 21,
+		210, 217, 17, 15,
+		118, 237, 21, 17,
+		228, 219, 16, 17,
+		162, 231, 17, 20,
+		192, 218, 17, 16,
+		140, 232, 21, 17,
+		215, 237, 16, 17,
+		210, 196, 17, 20,
+		228, 184, 17, 16,
+	]
+	var mothIndex = (moth*8 + dirEnum*2 + frame)*4;
+	var x, y, w, h;
+	var size = tileSize * 0.75;
+	x = mothArray[mothIndex], y = mothArray[mothIndex+1];
+	w = mothArray[mothIndex+2], h = mothArray[mothIndex+3];
+	//console.log(moth);
 	ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 }
 //@line 1 "src/Actor.js"

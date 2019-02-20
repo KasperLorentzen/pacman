@@ -91,25 +91,39 @@ var atlas = (function(){
         drawAtCell(function(x,y) { drawCookie(ctx,x,y); },      row,11);
         drawAtCell(function(x,y) { drawCookieFlash(ctx,x,y); },      row,12);
 
-        var drawGhostCells = function(row,color) {
-            var i,f;
-            var col = 0;
-            for (i=0; i<4; i++) { // dirEnum
-                for (f=0; f<2; f++) { // frame
-                    drawAtCell(function(x,y) { drawGhostSprite(ctx, x,y, f, i, false, false, false, color); },   row,col);
-                    col++;
-                }
-            }
-        };
+        // var drawGhostCells = function(row,color) {
+        //     var i,f;
+        //     var col = 0;
+        //     for (i=0; i<4; i++) { // dirEnum
+        //         for (f=0; f<2; f++) { // frame
+        //             drawAtCell(function(x,y) { drawGhostSprite(ctx, x,y, f, i, false, false, false, color); },   row,col);
+        //             col++;
+        //         }
+        //     }
+        // };
 
-        row++;
-        drawGhostCells(row, "#FF0000");
-        row++;
-        drawGhostCells(row, "#FFB8FF");
-        row++;
-        drawGhostCells(row, "#00FFFF");
-        row++;
-        drawGhostCells(row, "#FFB851");
+        // row++;
+        // drawGhostCells(row, "#FF0000");
+        // row++;
+        // drawGhostCells(row, "#FFB8FF");
+        // row++;
+        // drawGhostCells(row, "#00FFFF");
+        // row++;
+        // drawGhostCells(row, "#FFB851");
+				// Femtech MothGhosts
+				var drawAtariMothCells = function(row,moth) {
+					var i, frame=0, dir=0, col=0;
+					for (i=0; i<8; i++) { // frame
+						frame = col%2 == 0 ? 0 : 1;
+						dir = Math.floor(col/2);
+						drawAtCell(function(x,y) { drawAtariMoth(ctx, x,y, frame, dir, size, moth); }, row, col);
+						col++;
+					}
+				};
+				for (i=0;i<4;i++) {
+					row++;
+					drawAtariMothCells(row, i);
+				}
 
         row++;
         // draw disembodied eyes
@@ -293,15 +307,17 @@ var atlas = (function(){
         row++;
         drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size*0.75); }, row, 0);
 
-        // Femtech GraceBugGhost
-        row++
-        var i, col=0, frame=0, dir=0;
-        for (i=0; i<8; i++) {
-          frame = col%2 == 0 ? 0 : 1;
-          dir = Math.floor(col/2);
-          drawAtCell(function(x,y) { drawGraceBugGhost(ctx, x,y, frame, dir, size); }, row, col);
-          col++;
-        }
+        // // Femtech GraceBugGhost
+        // row++
+        // var i, col=0, frame=0, dir=0;
+        // for (i=0; i<8; i++) {
+        //   frame = col%2 == 0 ? 0 : 1;
+        //   dir = Math.floor(col/2);
+        //   drawAtCell(function(x,y) { drawGraceBugGhost(ctx, x,y, frame, dir, size); }, row, col);
+        //   col++;
+				// }
+				
+		
     };
 
     var copyCellTo = function(row, col, destCtx, x, y,display) {
@@ -580,39 +596,6 @@ var atlas = (function(){
         copyCellTo(row, col, destCtx, x, y);
     }
 
-    var copyGraceBug = function(destCtx,x,y,frame,dirEnum,scared,flash,eyes_only,color) {
-      var row,col;
-      if (eyes_only) {
-          row = 5;
-          col = dirEnum;
-      }
-      else if (scared) {
-          row = 5;
-          col = flash ? 6 : 4;
-          col += frame;
-      }
-      else {
-          col = dirEnum*2 + frame;
-          if (color == blinky.color) {
-              row = 25;
-          }
-          else if (color == pinky.color) {
-              row = 2;
-          }
-          else if (color == inky.color) {
-              row = 3;
-          }
-          else if (color == clyde.color) {
-              row = 4;
-          }
-          else {
-              row = 5;
-          }
-      }
-
-      copyCellTo(row, col, destCtx, x, y);
-    };
-
     return {
         create: create,
         getCanvas: function() { return canvas; },
@@ -632,6 +615,5 @@ var atlas = (function(){
         drawFemtechDots: copyFemtechDots,
         drawAtariWoman: copyWomanSprite,
         drawAtariWomenLogo: copyAtariWomenLogo,
-        drawAtariWomenGhosts: copyGraceBug,
     };
 })();
