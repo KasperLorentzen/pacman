@@ -124,6 +124,9 @@ var getGhostDrawFunc = function(mode) {
     else if (mode == GAME_COOKIE) {
         return atlas.drawMuppetSprite;
     }
+    else if (mode == GAME_ATARIWOMEN) {
+        return atlas.drawAtariWomenGhosts;
+    }
     else {
         return atlas.drawGhostSprite;
     }

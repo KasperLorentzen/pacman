@@ -284,6 +284,9 @@ var getGhostDrawFunc = function(mode) {
     else if (mode == GAME_COOKIE) {
         return atlas.drawMuppetSprite;
     }
+    else if (mode == GAME_ATARIWOMEN) {
+        return atlas.drawAtariWomenGhosts;
+    }
     else {
         return atlas.drawGhostSprite;
     }
@@ -2662,12 +2665,13 @@ var atlas = (function(){
         // row++;
         // drawGhostCells(row, "#FFB851");
 				// Femtech MothGhosts
-				var drawAtariMothCells = function(row,moth) {
+				var drawAtariMothCells = function(row,moth,sizeMod) {
 					var i, frame=0, dir=0, col=0;
+					var drawSize = !!sizeMod ? size * sizeMod : size;
 					for (i=0; i<8; i++) { // frame
 						frame = col%2 == 0 ? 0 : 1;
 						dir = Math.floor(col/2);
-						drawAtCell(function(x,y) { drawAtariMoth(ctx, x,y, frame, dir, size, moth); }, row, col);
+						drawAtCell(function(x,y) { drawAtariMoth(ctx, x,y, frame, dir, drawSize, moth); }, row, col);
 						col++;
 					}
 				};
@@ -2858,17 +2862,16 @@ var atlas = (function(){
         row++;
         drawAtCell(function(x,y) { drawAtariWomenLogo(ctx, x,y, size*0.75); }, row, 0);
 
-        // // Femtech GraceBugGhost
-        // row++
-        // var i, col=0, frame=0, dir=0;
-        // for (i=0; i<8; i++) {
-        //   frame = col%2 == 0 ? 0 : 1;
-        //   dir = Math.floor(col/2);
-        //   drawAtCell(function(x,y) { drawGraceBugGhost(ctx, x,y, frame, dir, size); }, row, col);
-        //   col++;
-				// }
-				
-		
+        // Femtech Scared Moth Ghosts
+				for (i=4;i<6;i++) {
+					row++;
+					drawAtariMothCells(row, i);
+				}
+        // Femtech Scared Moth Ghosts
+				for (i=4;i<6;i++) {
+					row++;
+					drawAtariMothCells(row, i, 0.5);
+				}
     };
 
     var copyCellTo = function(row, col, destCtx, x, y,display) {
@@ -3145,7 +3148,41 @@ var atlas = (function(){
     var copyAtariWomenLogo = function(destCtx,x,y) {
         var row = 24, col = 0;
         copyCellTo(row, col, destCtx, x, y);
-    }
+		}
+		
+		var copyAtariWomenGhosts = function(destCtx,x,y,frame,dirEnum,scared,flash,eyes_only,color) {
+			var row,col;
+			if (eyes_only) {
+				row = 27;
+				row += !!Math.round(Math.random()) ? 1 : 0;
+				col = dirEnum*2 + frame;
+		}
+			else if (scared) {
+					row = 25;
+					row += flash ? 1 : 0;
+					col = dirEnum*2 + frame;
+			}
+			else {
+					col = dirEnum*2 + frame;
+					if (color == blinky.color) {
+							row = 1;
+					}
+					else if (color == pinky.color) {
+							row = 2;
+					}
+					else if (color == inky.color) {
+							row = 3;
+					}
+					else if (color == clyde.color) {
+							row = 4;
+					}
+					else {
+							row = 5;
+					}
+			}
+
+			copyCellTo(row, col, destCtx, x, y);
+		};
 
     return {
         create: create,
@@ -3165,7 +3202,8 @@ var atlas = (function(){
         drawSnail: copySnail,
         drawFemtechDots: copyFemtechDots,
         drawAtariWoman: copyWomanSprite,
-        drawAtariWomenLogo: copyAtariWomenLogo,
+				drawAtariWomenLogo: copyAtariWomenLogo,
+				drawAtariWomenGhosts: copyAtariWomenGhosts,
     };
 })();
 //@line 1 "src/renderers.js"
