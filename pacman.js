@@ -7562,7 +7562,7 @@ var drawAtariWomenFruit = function(ctx,x,y,num,size) {
 }
 
 var drawAtariWoman = function(ctx,dest_x,dest_y,frame,dirEnum,tileSize) {
-	console.log(!!ctx, dest_x, dest_y, dirEnum, frame);
+	//console.log(!!ctx, dest_x, dest_y, dirEnum, frame);
 	var img = document.getElementById('atariWoman');
 	var x, y, w, h;
 	var size = tileSize * 0.75;
@@ -7643,7 +7643,7 @@ var drawAtariWoman = function(ctx,dest_x,dest_y,frame,dirEnum,tileSize) {
 				break;
 		}
 	}
-	console.log(!!img,x,y,w,h);
+	//console.log(!!img,x,y,w,h);
 	ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 }
 //@line 1 "src/Actor.js"
