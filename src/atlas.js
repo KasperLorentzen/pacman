@@ -4,7 +4,7 @@ var atlas = (function(){
     var canvas,ctx;
     var size = 22;
     var cols = 14; // has to be ONE MORE than intended to fix some sort of CHROME BUG (last cell always blank?)
-    var rows = 22+1+4+1+1; 
+    var rows = 22+1+4+1+1+1;
     // Femtech added rows: 1 (1s and 0s) + 4 (boy sprite) + 1 (AtariWomenPill) + 1 (GraceBug)
 
     var creates = 0;
@@ -317,7 +317,12 @@ var atlas = (function(){
 				for (i=4;i<6;i++) {
 					row++;
 					drawAtariMothCells(row, i, 0.5);
-				}
+        }
+        
+        row++;
+        for (i=0;i<6;i++) {
+          drawAtCell(function(x,y) { drawAtariCutscenes(ctx, x,y,i, size); }, row, i);
+        }
     };
 
     var copyCellTo = function(row, col, destCtx, x, y,display) {
@@ -628,7 +633,13 @@ var atlas = (function(){
 			}
 
 			copyCellTo(row, col, destCtx, x, y);
-		};
+    };
+    
+    var copyAtariWomenCutscenes = function(destCtx,x,y,col) {
+      var row = 27;
+      copyCellTo(row, col, destCtx, x, y);
+    }
+
 
     return {
         create: create,
@@ -648,7 +659,8 @@ var atlas = (function(){
         drawSnail: copySnail,
         drawFemtechDots: copyFemtechDots,
         drawAtariWoman: copyWomanSprite,
-				drawAtariWomenLogo: copyAtariWomenLogo,
-				drawAtariWomenGhosts: copyAtariWomenGhosts,
+		drawAtariWomenLogo: copyAtariWomenLogo,
+        drawAtariWomenGhosts: copyAtariWomenGhosts,
+        drawAtariWomenCutscenes : copyAtariWomenCutscenes,
     };
 })();

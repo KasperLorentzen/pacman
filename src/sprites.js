@@ -2732,6 +2732,22 @@ var drawAtariMoth = function(ctx,dest_x,dest_y,frame,dirEnum,tileSize, moth) {
 	var size = tileSize * 0.75;
 	x = mothArray[mothIndex], y = mothArray[mothIndex+1];
 	w = mothArray[mothIndex+2], h = mothArray[mothIndex+3];
-	//console.log(moth);
+	ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
+}
+
+var drawAtariCutscenes = function(ctx,dest_x,dest_y,spriteNum,tileSize) {
+	var img = document.getElementById('cutscenes');
+  var csArray = [
+    /*Computer =*/ 0, 0, 50, 35,
+    /*Mushroom =*/ 51, 0, 36, 34,
+    /*Spider_1*/ 0, 36, 26, 23,
+    /*Spider_2*/ 54, 35, 26, 22,
+    /*woman__1 =*/ 27, 36, 26, 23,
+    /*Woman__2 =*/ 88, 0, 26, 23
+  ]
+  var csIndex = spriteNum*4;
+  var size = tileSize;
+	x = csArray[csIndex], y = csArray[csIndex+1];
+	w = csArray[csIndex+2], h = csArray[csIndex+3];
 	ctx.drawImage(img, x,y,w,h, dest_x-size/2,dest_y-size/2, size,size);
 }

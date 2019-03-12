@@ -9,7 +9,7 @@ var playCutScene = function(cutScene, nextState) {
     renderer.drawMap(true);
 
     // miss the audio silence and time it cleanly for pacman cut scene 1
-    setTimeout(audio.coffeeBreakMusic.startLoop, 1200);
+    //setTimeout(audio.coffeeBreakMusic.startLoop, 1200);
     cutScene.nextState = nextState;
     switchState(cutScene, 60);
 
@@ -1075,12 +1075,191 @@ var cookieCutscene2 = (function() {
     }); // returned object
 })(); // mspacCutscene1
 
+var atariwomenCutscene1 = (function() {
+  
+  // background text
+  var drawDesc = function(ctx){
+    var desc = [
+        "on my first day at work, i",
+        "was introduced to maybe 30",
+        "guys. They're all mostly",
+        "Dave? i'll just call everyone",
+        "dave.",
+    ];
+    var numDescLines = desc.length;
+    ctx.font = tileSize+"px ArcadeR";
+    ctx.fillStyle = "#FFF";
+    ctx.textBaseline = "top";
+    ctx.textAlign = "center";
+    var y = 4*tileSize;//12*tileSize;
+    var i;
+    for (i=0; i<numDescLines; i++) {
+        ctx.fillText(desc[i],14*tileSize,y+i*2*tileSize);
+    }
+  };
+  
+  // create new players woman and ghost for this scene
+  var woman = new Player();
+  var ghost = new Player();
+
+  var drawPlayer = function(ctx,player) {
+      var frame = player.getAnimFrame();
+      var func;
+      if (player == woman) {
+        func = atlas.drawAtariWoman;
+      }
+      else if (player == ghost) {
+        func = atlas.drawAtariWomenGhosts;
+      }
+      func(ctx, player.pixel.x, player.pixel.y, player.dirEnum, frame);
+  };
+
+  return newChildObject(scriptState, {
+    init: function() {
+        scriptState.init.call(this);
+        
+        audio.cutscene1.play();
+
+        // initialize actor positions
+        pacman.setPos(232, 164);
+        //blinky.setPos(257, 164);
+        // woman.setPos(232, 164);
+        ghost.setPos(257, 164);
+
+        // initialize actor directions
+        // blinky.setDir(DIR_LEFT);
+        // blinky.faceDirEnum = DIR_LEFT;
+        pacman.setDir(DIR_LEFT);
+        ghost.setDir(DIR_LEFT);
+        ghost.faceDirEnum = DIR_LEFT;
+        // woman.setDir(DIR_LEFT);
+
+        // initialize misc actor properties
+        // blinky.scared = false;
+        // blinky.mode = GHOST_OUTSIDE;
+        ghost.scared = false;
+        ghost.mode = GHOST_OUTSIDE;
+
+        // clear other states
+        backupCheats();
+        clearCheats();
+        energizer.reset();
+
+        // temporarily override actor step sizes
+        pacman.getNumSteps = function() {
+            return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN);
+        };
+        blinky.getNumSteps = function() {
+          return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_ELROY2);
+        };
+        ghost.getNumSteps = function() {
+          return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_ELROY2);
+        };
+
+        // temporarily override steering functions
+        ghost.steer = pacman.steer = blinky.steer = function(){};
+    },
+    triggers: {
+
+        // Blinky chases Pac-Man
+        0: {
+            update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                  pacman.update(j);
+                  ghost.update(j);
+                  // blinky.update(j);
+                }
+                pacman.frames++;
+                ghost.frames++;
+                // blinky.frames++;
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.renderFunc(function(ctx) {
+                  drawPlayer(ctx,ghost);
+                });
+                // renderer.drawGhost(blinky);
+                renderer.endMapClip();
+            },
+        },
+
+        // Pac-Man chases Blinky
+        260: {
+            init: function() {
+                woman.setPos(-193, 155);
+                blinky.setPos(-8, 164);
+
+                // initialize actor directions
+                blinky.setDir(DIR_RIGHT);
+                blinky.faceDirEnum = DIR_RIGHT;
+                pacman.setDir(DIR_RIGHT);
+
+                // initialize misc actor properties
+                blinky.scared = true;
+
+                // temporarily override step sizes
+                pacman.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN_FRIGHT);
+                };
+                blinky.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_GHOST_FRIGHT);
+                };
+            },
+            update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                    pacman.update(j);
+                    blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                    var frame = Math.floor(pacman.steps/4) % 4; // slower to switch animation frame when giant
+                    if (frame == 3) {
+                        frame = 1;
+                    }
+                    drawGiantPacmanSprite(ctx, pacman.pixel.x, pacman.pixel.y, pacman.dirEnum, frame);
+                });
+                renderer.endMapClip();
+            },
+        },
+
+        // end
+        1600: {
+            init: function() {
+                // disable custom steps
+                delete pacman.getNumSteps;
+                delete blinky.getNumSteps;
+
+                // disable custom steering
+                delete pacman.steer;
+                delete blinky.steer;
+
+                // exit to next level
+                restoreCheats();
+                switchState(atariwomenCutscene1.nextState, 60);
+            },
+        },
+    },
+  });
+})(); // end of atariwomenCutscene1
+
 var cutscenes = [
     [pacmanCutscene1], // GAME_PACMAN
     [mspacmanCutscene1, mspacmanCutscene2], // GAME_MSPACMAN
     [cookieCutscene1, cookieCutscene2], // GAME_COOKIE
     [mspacmanCutscene1, mspacmanCutscene2], // GAME_OTTO
-    [pacmanCutscene1], // ATARI_WOMEN
+    [atariwomenCutscene1, atariwomenCutscene1, atariwomenCutscene1, atariwomenCutscene1], // ATARI_WOMEN
 ];
 
 var isInCutScene = function() {
@@ -1129,6 +1308,16 @@ var triggerCutsceneAtEndLevel = function() {
         }
         else if (level == 5) {
             playCutScene(cookieCutscene2, readyNewState);
+            return true;
+        }
+    }
+    else if (gameMode == GAME_ATARIWOMEN) {
+        if (level == 2) {
+            playCutScene(mspacmanCutscene1, readyNewState);
+            return true;
+        }
+        else if (level == 5) {
+            playCutScene(mspacmanCutscene2, readyNewState);
             return true;
         }
     }

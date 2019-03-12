@@ -475,12 +475,12 @@ var preNewGameState = (function() {
             newGameState.setStartLevel(1);
             exitTo(newGameState, 60);
         });
-    menu.addTextButton("PRACTICE",
-        function() { 
-            practiceMode = true;
-            turboMode = false;
-            exitTo(selectActState);
-        });
+    // menu.addTextButton("PRACTICE",
+    //     function() { 
+    //         practiceMode = true;
+    //         turboMode = false;
+    //         exitTo(selectActState);
+    //     });
     menu.addSpacer(0.5);
     menu.addTextButton("CUTSCENES",
         function() { 
@@ -815,6 +815,10 @@ var cutSceneMenuState = (function() {
     menu.addTextButton("CUTSCENE 3",
         function() { 
             exitToCutscene(cutscenes[gameMode][2]);
+        });
+    menu.addTextButton("CUTSCENE 4",
+        function() { 
+            exitToCutscene(cutscenes[gameMode][3]);
         });
     menu.addSpacer();
     menu.addTextButton("BACK",

@@ -67,6 +67,7 @@ function preloadAudio() {
     this.extend            = new audioTrack('sounds/extend.mp3');
     this.eating            = new audioTrack('sounds/eating.mp3', 0.5);
     this.startMusic        = new audioTrack('sounds/sound2.mp3'); // new audioTrack('sounds/start-music.mp3');
+    this.cutscene1         = new audioTrack('sounds/daves.mp3');
 
     this.ghostReset = function(noResetTime) {
         for (var s in this) {
