@@ -1098,22 +1098,6 @@ var atariwomenCutscene1 = (function() {
     }
   };
   
-  // create new players woman and ghost for this scene
-  var woman = new Player();
-  var ghost = blinky; // new Player();
-
-  var drawPlayer = function(ctx,player) {
-      var frame = player.getAnimFrame();
-      var func;
-      if (player == woman) {
-        func = atlas.drawAtariWoman;
-      }
-      else if (player == ghost) {
-        func = atlas.drawAtariWomenGhosts;
-      }
-      func(ctx, player.pixel.x, player.pixel.y, player.dirEnum, frame);
-  };
-
   return newChildObject(scriptState, {
     init: function() {
         scriptState.init.call(this);
@@ -1122,23 +1106,16 @@ var atariwomenCutscene1 = (function() {
 
         // initialize actor positions
         pacman.setPos(232, 164);
-        //blinky.setPos(257, 164);
-        // woman.setPos(232, 164);
-        ghost.setPos(257, 164);
+        blinky.setPos(257, 164);
 
         // initialize actor directions
-        // blinky.setDir(DIR_LEFT);
-        // blinky.faceDirEnum = DIR_LEFT;
+        blinky.setDir(DIR_LEFT);
+        blinky.faceDirEnum = DIR_LEFT;
         pacman.setDir(DIR_LEFT);
-        ghost.setDir(DIR_LEFT);
-        ghost.faceDirEnum = DIR_LEFT;
-        // woman.setDir(DIR_LEFT);
 
         // initialize misc actor properties
-        // blinky.scared = false;
-        // blinky.mode = GHOST_OUTSIDE;
-        ghost.scared = false;
-        ghost.mode = GHOST_OUTSIDE;
+        blinky.scared = false;
+        blinky.mode = GHOST_OUTSIDE;
 
         // clear other states
         backupCheats();
@@ -1152,12 +1129,9 @@ var atariwomenCutscene1 = (function() {
         blinky.getNumSteps = function() {
           return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_ELROY2);
         };
-        ghost.getNumSteps = function() {
-          return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_ELROY2);
-        };
 
         // temporarily override steering functions
-        ghost.steer = pacman.steer = blinky.steer = function(){};
+        pacman.steer = blinky.steer = function(){};
     },
     triggers: {
 
@@ -1167,23 +1141,17 @@ var atariwomenCutscene1 = (function() {
                 var j;
                 for (j=0; j<2; j++) {
                   pacman.update(j);
-                  ghost.update(j);
-                  // blinky.update(j);
+                  blinky.update(j);
                 }
                 pacman.frames++;
-                ghost.frames++;
-                // blinky.frames++;
+                blinky.frames++;
             },
             draw: function() {
                 renderer.blitMap();
                 renderer.beginMapClip();
                 renderer.renderFunc(drawDesc);
                 renderer.drawPlayer();
-                // renderer.renderFunc(function(ctx) {
-                //   drawPlayer(ctx,ghost);
-                // });
-                renderer.drawGhost(ghost);
-                // renderer.drawGhost(blinky);
+                renderer.drawGhost(blinky);
                 renderer.endMapClip();
             },
         },
@@ -1191,7 +1159,7 @@ var atariwomenCutscene1 = (function() {
         // Pac-Man chases Blinky
         260: {
             init: function() {
-                woman.setPos(-193, 155);
+                pacman.setPos(-193, 164);
                 blinky.setPos(-8, 164);
 
                 // initialize actor directions
@@ -1209,6 +1177,8 @@ var atariwomenCutscene1 = (function() {
                 blinky.getNumSteps = function() {
                     return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_GHOST_FRIGHT);
                 };
+                // temporarily override steering functions
+                pacman.steer = blinky.steer = function(){};
             },
             update: function() {
                 var j;
@@ -1223,13 +1193,11 @@ var atariwomenCutscene1 = (function() {
                 renderer.blitMap();
                 renderer.beginMapClip();
                 renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
                 renderer.drawGhost(blinky);
                 renderer.renderFunc(function(ctx) {
-                    var frame = Math.floor(pacman.steps/4) % 4; // slower to switch animation frame when giant
-                    if (frame == 3) {
-                        frame = 1;
-                    }
-                    drawGiantPacmanSprite(ctx, pacman.pixel.x, pacman.pixel.y, pacman.dirEnum, frame);
+                  var fruitNum = getNumFromFruitName("cherry");
+                  drawAtariWomenFruit(ctx,140,140, fruitNum, tileSize*3);
                 });
                 renderer.endMapClip();
             },

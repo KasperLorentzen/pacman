@@ -828,7 +828,6 @@ var initRenderer = function(){
                             bgCtx.save();
                             bgCtx.translate((numCols-3)*tileSize - i*16*scale, (numRows-1)*tileSize);
                             bgCtx.scale(scale,scale);
-                            // var drawAtariWomenFruit = function(ctx,x,y,num,size) 
                             drawFunc(bgCtx,0,0, fruitNum, tileSize*1.5);
                             bgCtx.restore();
                         }
