@@ -2390,6 +2390,25 @@ var getSpriteFuncFromFruitName = function(name) {
     return funcs[name];
 };
 
+var getNumFromFruitName = function(name) {
+    var funcs = {
+        'cherry': 0,
+        'strawberry': 1,
+        'orange': 2,
+        'apple': 3,
+        'melon': 4,
+        'galaxian': 5,
+        'bell': 6,
+        'key': 7,
+        'pretzel': 8,
+        'pear': 9,
+        'banana': 10,
+        'cookie': 11,
+    };
+
+    return funcs[name];
+};
+
 var drawRecordSymbol = function(ctx,x,y,color) {
     ctx.save();
     ctx.fillStyle = color;

@@ -1082,7 +1082,7 @@ var atariwomenCutscene1 = (function() {
     var desc = [
         "on my first day at work, i",
         "was introduced to maybe 30",
-        "guys. They're all mostly",
+        "guys. Are they all mostly",
         "Dave? i'll just call everyone",
         "dave.",
     ];
@@ -1100,7 +1100,7 @@ var atariwomenCutscene1 = (function() {
   
   // create new players woman and ghost for this scene
   var woman = new Player();
-  var ghost = new Player();
+  var ghost = blinky; // new Player();
 
   var drawPlayer = function(ctx,player) {
       var frame = player.getAnimFrame();
@@ -1179,9 +1179,10 @@ var atariwomenCutscene1 = (function() {
                 renderer.beginMapClip();
                 renderer.renderFunc(drawDesc);
                 renderer.drawPlayer();
-                renderer.renderFunc(function(ctx) {
-                  drawPlayer(ctx,ghost);
-                });
+                // renderer.renderFunc(function(ctx) {
+                //   drawPlayer(ctx,ghost);
+                // });
+                renderer.drawGhost(ghost);
                 // renderer.drawGhost(blinky);
                 renderer.endMapClip();
             },
@@ -1343,10 +1344,10 @@ var atariwomenCutscene3 = (function() {
   // background text
   var drawDesc = function(ctx){
     var desc = [
-        "I think it will be cool to",
-        "make the mushrooms spread out",
-        "instead of bunching. It's a lot",
-        "of code! I hope it's worth it.",
+        "I think it will be cool",
+        "to position the mushrooms",
+        "randomly. It's a lot of",
+        "code! I hope it's worth it.",
         "I think it's worth it."
     ];
     var numDescLines = desc.length;
@@ -1416,8 +1417,9 @@ var atariwomenCutscene4 = (function() {
         "The spider was the first",
         "feature in centipede that I",
         "drew and coded completely on",
-        "my own. Look good,",
-        "right?!"
+        "my own. I wanted to be",
+        "certain the spider was",
+        "different and compelling"
     ];
     var numDescLines = desc.length;
     ctx.font = tileSize+"px ArcadeR";
@@ -1552,12 +1554,20 @@ var triggerCutsceneAtEndLevel = function() {
         }
     }
     else if (gameMode == GAME_ATARIWOMEN) {
-        if (level == 2) {
-            playCutScene(mspacmanCutscene1, readyNewState);
+        if (level == 1) {
+            playCutScene(atariwomenCutscene1, readyNewState);
             return true;
         }
-        else if (level == 5) {
-            playCutScene(mspacmanCutscene2, readyNewState);
+        else if (level == 2) {
+            playCutScene(atariwomenCutscene2, readyNewState);
+            return true;
+        }
+        else if (level == 3) {
+            playCutScene(atariwomenCutscene3, readyNewState);
+            return true;
+        }
+        else if (level == 4) {
+            playCutScene(atariwomenCutscene4, readyNewState);
             return true;
         }
     }

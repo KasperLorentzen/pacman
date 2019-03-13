@@ -821,12 +821,15 @@ var initRenderer = function(){
                 for (i=0, j=startLevel-numFruit+1; i<numFruit && j<=level; j++, i++) {
                     f = fruits[j];
                     if (f) {
-                        drawFunc = getSpriteFuncFromFruitName(f.name);
+                        // drawFunc = getSpriteFuncFromFruitName(f.name);
+                        var fruitNum = getNumFromFruitName(f.name);
+                        drawFunc = drawAtariWomenFruit;
                         if (drawFunc) {
                             bgCtx.save();
                             bgCtx.translate((numCols-3)*tileSize - i*16*scale, (numRows-1)*tileSize);
                             bgCtx.scale(scale,scale);
-                            drawFunc(bgCtx,0,0);
+                            // var drawAtariWomenFruit = function(ctx,x,y,num,size) 
+                            drawFunc(bgCtx,0,0, fruitNum, tileSize*1.5);
                             bgCtx.restore();
                         }
                     }
