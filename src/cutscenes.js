@@ -1236,7 +1236,7 @@ var atariwomenCutscene1 = (function() {
         },
 
         // end
-        1600: {
+        1420: {
             init: function() {
                 // disable custom steps
                 delete pacman.getNumSteps;
@@ -1328,7 +1328,7 @@ var atariwomenCutscene2 = (function() {
         },
 
         // end
-        1350: {
+        1250: {
             init: function() {
                 // exit to next level
                 restoreCheats();
@@ -1398,7 +1398,7 @@ var atariwomenCutscene3 = (function() {
         },
 
         // end
-        900: {
+        800: {
             init: function() {
                 // exit to next level
                 restoreCheats();
@@ -1485,7 +1485,7 @@ var atariwomenCutscene4 = (function() {
         },
 
         // end
-        850: {
+        700: {
             init: function() {
                 // exit to next level
                 restoreCheats();
