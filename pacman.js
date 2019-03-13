@@ -13175,7 +13175,7 @@ var atariwomenCutscene2 = (function() {
         },
 
         // end
-        1250: {
+        1300: {
             init: function() {
                 // exit to next level
                 restoreCheats();
@@ -13245,7 +13245,7 @@ var atariwomenCutscene3 = (function() {
         },
 
         // end
-        800: {
+        900: {
             init: function() {
                 // exit to next level
                 restoreCheats();
@@ -13266,7 +13266,7 @@ var atariwomenCutscene4 = (function() {
         "drew and coded completely on",
         "my own. I wanted to be",
         "certain the spider was",
-        "different and compelling"
+        "different and compelling."
     ];
     var numDescLines = desc.length;
     ctx.font = tileSize+"px ArcadeR";
@@ -13332,7 +13332,7 @@ var atariwomenCutscene4 = (function() {
         },
 
         // end
-        700: {
+        750: {
             init: function() {
                 // exit to next level
                 restoreCheats();
