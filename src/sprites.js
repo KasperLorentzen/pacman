@@ -2588,7 +2588,7 @@ var drawGraceBugGhost = function(ctx,x,y,frame,dir,size) {
 }
 
 var drawAtariWomenFruit = function(ctx,x,y,num,size) {
-    if (!!!num) {
+    if (!!!num || num<0 || num>7) {
         num = 0;
     }
     var img = document.getElementById(`fruit${num+1}`);
