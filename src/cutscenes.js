@@ -1254,12 +1254,252 @@ var atariwomenCutscene1 = (function() {
   });
 })(); // end of atariwomenCutscene1
 
+var atariwomenCutscene2 = (function() {
+  
+  // background text
+  var drawDesc = function(ctx){
+    var desc = [
+        "I code and fix bugs",
+        "all day. And then I",
+        "dream about it all",
+        "night.",
+    ];
+    var numDescLines = desc.length;
+    ctx.font = tileSize+"px ArcadeR";
+    ctx.fillStyle = "#FFF";
+    ctx.textBaseline = "top";
+    ctx.textAlign = "center";
+    var y = 4*tileSize;//12*tileSize;
+    var i;
+    for (i=0; i<numDescLines; i++) {
+        ctx.fillText(desc[i],14*tileSize,y+i*2*tileSize);
+    }
+  };
+  
+
+  return newChildObject(scriptState, {
+    init: function() {
+        scriptState.init.call(this);
+        
+        audio.cutscene2.play();
+
+    },
+    triggers: {
+
+        // Blinky chases Pac-Man
+        0: {
+            update: function() {
+                // var j;
+                // for (j=0; j<2; j++) {
+                //   pacman.update(j);
+                //   ghost.update(j);
+                // }
+                // pacman.frames++;
+                // ghost.frames++;
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.endMapClip();
+            },
+        },
+
+        // Pac-Man chases Blinky
+        260: {
+            init: function() {
+            },
+            update: function() {
+                // var j;
+                // for (j=0; j<2; j++) {
+                //     pacman.update(j);
+                //     blinky.update(j);
+                // }
+                // pacman.frames++;
+                // blinky.frames++;
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.endMapClip();
+            },
+        },
+
+        // end
+        1350: {
+            init: function() {
+                // exit to next level
+                restoreCheats();
+                switchState(atariwomenCutscene2.nextState, 60);
+            },
+        },
+    },
+  });
+})(); // end of atariwomenCutscene2
+
+var atariwomenCutscene3 = (function() {
+  
+  // background text
+  var drawDesc = function(ctx){
+    var desc = [
+        "I think it will be cool to",
+        "make the mushrooms spread out",
+        "instead of bunching. It's a lot",
+        "of code! I hope it's worth it.",
+        "I think it's worth it."
+    ];
+    var numDescLines = desc.length;
+    ctx.font = tileSize+"px ArcadeR";
+    ctx.fillStyle = "#FFF";
+    ctx.textBaseline = "top";
+    ctx.textAlign = "center";
+    var y = 4*tileSize;//12*tileSize;
+    var i;
+    for (i=0; i<numDescLines; i++) {
+        ctx.fillText(desc[i],14*tileSize,y+i*2*tileSize);
+    }
+  };
+  
+  return newChildObject(scriptState, {
+    init: function() {
+        scriptState.init.call(this);
+        
+        audio.cutscene3.play();
+
+    },
+    triggers: {
+
+        // Blinky chases Pac-Man
+        0: {
+            update: function() {
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.endMapClip();
+            },
+        },
+
+        // Pac-Man chases Blinky
+        260: {
+            init: function() {
+            },
+            update: function() {
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.endMapClip();
+            },
+        },
+
+        // end
+        900: {
+            init: function() {
+                // exit to next level
+                restoreCheats();
+                switchState(atariwomenCutscene3.nextState, 60);
+            },
+        },
+    },
+  });
+})(); // end of atariwomenCutscene3
+
+var atariwomenCutscene4 = (function() {
+  
+  // background text
+  var drawDesc = function(ctx){
+    var desc = [
+        "The spider was the first",
+        "feature in centipede that I",
+        "drew and coded completely on",
+        "my own. Look good,",
+        "right?!"
+    ];
+    var numDescLines = desc.length;
+    ctx.font = tileSize+"px ArcadeR";
+    ctx.fillStyle = "#FFF";
+    ctx.textBaseline = "top";
+    ctx.textAlign = "center";
+    var y = 4*tileSize;//12*tileSize;
+    var i;
+    for (i=0; i<numDescLines; i++) {
+        ctx.fillText(desc[i],14*tileSize,y+i*2*tileSize);
+    }
+  };
+  
+  // create new players woman and ghost for this scene
+  var woman = new Player();
+  var ghost = new Player();
+
+  var drawPlayer = function(ctx,player) {
+      var frame = player.getAnimFrame();
+      var func;
+      if (player == woman) {
+        func = atlas.drawAtariWoman;
+      }
+      else if (player == ghost) {
+        func = atlas.drawAtariWomenGhosts;
+      }
+      func(ctx, player.pixel.x, player.pixel.y, player.dirEnum, frame);
+  };
+
+  return newChildObject(scriptState, {
+    init: function() {
+        scriptState.init.call(this);
+        
+        audio.cutscene4.play();
+
+    },
+    triggers: {
+
+        // Blinky chases Pac-Man
+        0: {
+            update: function() {
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.endMapClip();
+            },
+        },
+
+        // Pac-Man chases Blinky
+        260: {
+            init: function() {
+            },
+            update: function() {
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.endMapClip();
+            },
+        },
+
+        // end
+        850: {
+            init: function() {
+                // exit to next level
+                restoreCheats();
+                switchState(atariwomenCutscene4.nextState, 60);
+            },
+        },
+    },
+  });
+})(); // end of atariwomenCutscene4
+
 var cutscenes = [
     [pacmanCutscene1], // GAME_PACMAN
     [mspacmanCutscene1, mspacmanCutscene2], // GAME_MSPACMAN
     [cookieCutscene1, cookieCutscene2], // GAME_COOKIE
     [mspacmanCutscene1, mspacmanCutscene2], // GAME_OTTO
-    [atariwomenCutscene1, atariwomenCutscene1, atariwomenCutscene1, atariwomenCutscene1], // ATARI_WOMEN
+    [atariwomenCutscene1, atariwomenCutscene2, atariwomenCutscene3, atariwomenCutscene4], // ATARI_WOMEN
 ];
 
 var isInCutScene = function() {
