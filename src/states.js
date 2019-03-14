@@ -797,7 +797,7 @@ var cutSceneMenuState = (function() {
         if (s) {
             gameTitleState.shutdown();
             menu.disable();
-            playCutScene(s,cutSceneMenuState,audio.cutscene1);
+            playCutScene(s,cutSceneMenuState);
         }
     };
 

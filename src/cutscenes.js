@@ -2,13 +2,12 @@
 // Cutscenes
 //
 
-var playCutScene = function(cutScene, nextState, sound) {
+var playCutScene = function(cutScene, nextState) {
 
     // redraw map buffer with fruit list but no map structure
     map = undefined;
     renderer.drawMap(true);
 
-    setTimeout(sound.startLoop, 1200);
     // miss the audio silence and time it cleanly for pacman cut scene 1
     // setTimeout(audio.coffeeBreakMusic.startLoop, 1200);
     cutScene.nextState = nextState;
@@ -1106,7 +1105,7 @@ var atariwomenCutscene1 = (function() {
     init: function() {
         scriptState.init.call(this);
         
-        // audio.cutscene1.play();
+        audio.cutscene1.play();
 
         // initialize actor positions
         pacman.setPos(232, 164);
