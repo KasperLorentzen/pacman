@@ -13524,6 +13524,14 @@ var atariwomenCutscene2 = (function() {
         // end
         1300: {
             init: function() {
+                // disable custom steps
+                delete pacman.getNumSteps;
+                delete blinky.getNumSteps;
+
+                // disable custom steering
+                delete pacman.steer;
+                delete blinky.steer;
+
                 // exit to next level
                 restoreCheats();
                 switchState(atariwomenCutscene2.nextState, 60);
@@ -13726,7 +13734,15 @@ var atariwomenCutscene3 = (function() {
 
         // end
         900: {
-            init: function() {
+            init: function() {                
+                // disable custom steps
+                delete pacman.getNumSteps;
+                delete blinky.getNumSteps;
+
+                // disable custom steering
+                delete pacman.steer;
+                delete blinky.steer;
+
                 // exit to next level
                 restoreCheats();
                 switchState(atariwomenCutscene3.nextState, 60);
@@ -13925,8 +13941,16 @@ var atariwomenCutscene4 = (function() {
             },
         },
         // end
-        750: {
+        800: {
             init: function() {
+                // disable custom steps
+                delete pacman.getNumSteps;
+                delete blinky.getNumSteps;
+
+                // disable custom steering
+                delete pacman.steer;
+                delete blinky.steer;
+                
                 // exit to next level
                 restoreCheats();
                 switchState(atariwomenCutscene4.nextState, 60);
