@@ -13236,25 +13236,28 @@ var atariwomenCutscene1 = (function() {
 
 var atariwomenCutscene2 = (function() {
   
-  // background text
-  var drawDesc = function(ctx){
-    var desc = [
-        "I code and fix bugs",
-        "all day. And then I",
-        "dream about it all",
-        "night.",
-    ];
-    var numDescLines = desc.length;
-    ctx.font = tileSize+"px ArcadeR";
-    ctx.fillStyle = "#FFF";
-    ctx.textBaseline = "top";
-    ctx.textAlign = "center";
-    var y = 4*tileSize;//12*tileSize;
-    var i;
-    for (i=0; i<numDescLines; i++) {
-        ctx.fillText(desc[i],14*tileSize,y+i*2*tileSize);
-    }
-  };
+    // background text
+    var drawDesc = function(ctx){
+        var desc = [
+            "I code and fix bugs",
+            "all day. And then I",
+            "dream about it all",
+            "night.",
+        ];
+        var numDescLines = desc.length;
+        ctx.font = tileSize+"px ArcadeR";
+        ctx.fillStyle = "#FFF";
+        ctx.textBaseline = "top";
+        ctx.textAlign = "center";
+        var y = 4*tileSize;//12*tileSize;
+        var i;
+        for (i=0; i<numDescLines; i++) {
+            ctx.fillText(desc[i],14*tileSize,y+i*2*tileSize);
+        }
+    };
+    var fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+    var fruitX = Math.round(Math.random()*200)+1;
+    var fruitY = Math.round(Math.random()*40)+110;
   
 
   return newChildObject(scriptState, {
@@ -13263,49 +13266,261 @@ var atariwomenCutscene2 = (function() {
         
         audio.cutscene2.play();
 
+        // initialize actor positions
+        pacman.setPos(232, 164);
+        blinky.setPos(257, 164);
+
+        // initialize actor directions
+        blinky.setDir(DIR_LEFT);
+        blinky.faceDirEnum = DIR_LEFT;
+        pacman.setDir(DIR_LEFT);
+
+        // initialize misc actor properties
+        blinky.scared = false;
+        blinky.mode = GHOST_OUTSIDE;
+
+        // clear other states
+        backupCheats();
+        clearCheats();
+        energizer.reset();
+
+        // temporarily override actor step sizes
+        pacman.getNumSteps = function() {
+            return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN);
+        };
+        blinky.getNumSteps = function() {
+          return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_ELROY2);
+        };
+
+        // temporarily override steering functions
+        pacman.steer = blinky.steer = function(){};
     },
     triggers: {
 
         // Blinky chases Pac-Man
         0: {
             update: function() {
-                // var j;
-                // for (j=0; j<2; j++) {
-                //   pacman.update(j);
-                //   ghost.update(j);
-                // }
-                // pacman.frames++;
-                // ghost.frames++;
+                var j;
+                for (j=0; j<2; j++) {
+                  pacman.update(j);
+                  blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
             },
             draw: function() {
                 renderer.blitMap();
                 renderer.beginMapClip();
                 renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                    drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                  });
                 renderer.endMapClip();
             },
         },
 
         // Pac-Man chases Blinky
-        260: {
+        300: {
             init: function() {
+                pacman.setPos(-193, 164);
+                blinky.setPos(-8, 164);
+
+                // initialize actor directions
+                blinky.setDir(DIR_RIGHT);
+                blinky.faceDirEnum = DIR_RIGHT;
+                pacman.setDir(DIR_RIGHT);
+
+                // initialize misc actor properties
+                blinky.scared = true;
+
+                // temporarily override step sizes
+                pacman.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN_FRIGHT);
+                };
+                blinky.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_GHOST_FRIGHT);
+                };
+                // temporarily override steering functions
+                pacman.steer = blinky.steer = function(){};
+
+                fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+                fruitX = Math.round(Math.random()*200)+1;
+                fruitY = Math.round(Math.random()*40)+110;
             },
             update: function() {
-                // var j;
-                // for (j=0; j<2; j++) {
-                //     pacman.update(j);
-                //     blinky.update(j);
-                // }
-                // pacman.frames++;
-                // blinky.frames++;
+                var j;
+                for (j=0; j<2; j++) {
+                    pacman.update(j);
+                    blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
             },
             draw: function() {
                 renderer.blitMap();
                 renderer.beginMapClip();
                 renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                //   var fruitNum = getNumFromFruitName("strawberry");
+                //   drawAtariWomenFruit(ctx,100,140, fruitNum, tileSize*3);
+                  drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                });
+                renderer.endMapClip();
+            },
+        },
+        600: {
+            init: function() {
+                // initialize actor positions
+                pacman.setPos(232, 164);
+                blinky.setPos(257, 164);
+
+                // initialize actor directions
+                blinky.setDir(DIR_LEFT);
+                blinky.faceDirEnum = DIR_LEFT;
+                pacman.setDir(DIR_LEFT);
+
+                // initialize misc actor properties
+                blinky.scared = false;
+                blinky.mode = GHOST_OUTSIDE;
+
+                // temporarily override step sizes
+                pacman.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN_FRIGHT);
+                };
+                blinky.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_GHOST_FRIGHT);
+                };
+                // temporarily override steering functions
+                pacman.steer = blinky.steer = function(){};
+
+                fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+                fruitX = Math.round(Math.random()*200)+1;
+                fruitY = Math.round(Math.random()*40)+110;
+            },
+            update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                  pacman.update(j);
+                  blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                    drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                });
                 renderer.endMapClip();
             },
         },
 
+        900: {
+            init: function() {
+                pacman.setPos(-193, 164);
+                blinky.setPos(-8, 164);
+
+                // initialize actor directions
+                blinky.setDir(DIR_RIGHT);
+                blinky.faceDirEnum = DIR_RIGHT;
+                pacman.setDir(DIR_RIGHT);
+
+                // initialize misc actor properties
+                blinky.scared = true;
+
+                // temporarily override step sizes
+                pacman.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN_FRIGHT);
+                };
+                blinky.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_GHOST_FRIGHT);
+                };
+                // temporarily override steering functions
+                pacman.steer = blinky.steer = function(){};
+
+                fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+                fruitX = Math.round(Math.random()*200)+1;
+                fruitY = Math.round(Math.random()*40)+110;
+            },
+            update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                    pacman.update(j);
+                    blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                  drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                });
+                renderer.endMapClip();
+            },
+        },
+        1200: {
+            init: function() {
+                // initialize actor positions
+                pacman.setPos(232, 164);
+                blinky.setPos(257, 164);
+
+                // initialize actor directions
+                blinky.setDir(DIR_LEFT);
+                blinky.faceDirEnum = DIR_LEFT;
+                pacman.setDir(DIR_LEFT);
+
+                // initialize misc actor properties
+                blinky.scared = false;
+                blinky.mode = GHOST_OUTSIDE;
+
+                // temporarily override step sizes
+                pacman.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN_FRIGHT);
+                };
+                blinky.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_GHOST_FRIGHT);
+                };
+                // temporarily override steering functions
+                pacman.steer = blinky.steer = function(){};
+
+                fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+                fruitX = Math.round(Math.random()*200)+1;
+                fruitY = Math.round(Math.random()*40)+110;
+            },
+            update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                  pacman.update(j);
+                  blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                    drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                });
+                renderer.endMapClip();
+            },
+        },
         // end
         1300: {
             init: function() {
@@ -13340,12 +13555,44 @@ var atariwomenCutscene3 = (function() {
         ctx.fillText(desc[i],14*tileSize,y+i*2*tileSize);
     }
   };
-  
+  var fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+  var fruitX = Math.round(Math.random()*200)+1;
+  var fruitY = Math.round(Math.random()*40)+110;
+
   return newChildObject(scriptState, {
     init: function() {
         scriptState.init.call(this);
         
         audio.cutscene3.play();
+
+        // initialize actor positions
+        pacman.setPos(232, 164);
+        blinky.setPos(257, 164);
+
+        // initialize actor directions
+        blinky.setDir(DIR_LEFT);
+        blinky.faceDirEnum = DIR_LEFT;
+        pacman.setDir(DIR_LEFT);
+
+        // initialize misc actor properties
+        blinky.scared = false;
+        blinky.mode = GHOST_OUTSIDE;
+
+        // clear other states
+        backupCheats();
+        clearCheats();
+        energizer.reset();
+
+        // temporarily override actor step sizes
+        pacman.getNumSteps = function() {
+            return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN);
+        };
+        blinky.getNumSteps = function() {
+          return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_ELROY2);
+        };
+
+        // temporarily override steering functions
+        pacman.steer = blinky.steer = function(){};
 
     },
     triggers: {
@@ -13353,25 +13600,126 @@ var atariwomenCutscene3 = (function() {
         // Blinky chases Pac-Man
         0: {
             update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                  pacman.update(j);
+                  blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
             },
             draw: function() {
                 renderer.blitMap();
                 renderer.beginMapClip();
                 renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                    drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                  });
                 renderer.endMapClip();
             },
         },
 
         // Pac-Man chases Blinky
-        260: {
+        300: {
             init: function() {
+                pacman.setPos(-193, 164);
+                blinky.setPos(-8, 164);
+
+                // initialize actor directions
+                blinky.setDir(DIR_RIGHT);
+                blinky.faceDirEnum = DIR_RIGHT;
+                pacman.setDir(DIR_RIGHT);
+
+                // initialize misc actor properties
+                blinky.scared = true;
+
+                // temporarily override step sizes
+                pacman.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN_FRIGHT);
+                };
+                blinky.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_GHOST_FRIGHT);
+                };
+                // temporarily override steering functions
+                pacman.steer = blinky.steer = function(){};
+
+                fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+                fruitX = Math.round(Math.random()*200)+1;
+                fruitY = Math.round(Math.random()*40)+110;
             },
             update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                    pacman.update(j);
+                    blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
             },
             draw: function() {
                 renderer.blitMap();
                 renderer.beginMapClip();
                 renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                //   var fruitNum = getNumFromFruitName("strawberry");
+                //   drawAtariWomenFruit(ctx,100,140, fruitNum, tileSize*3);
+                  drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                });
+                renderer.endMapClip();
+            },
+        },
+        
+        600: {
+            init: function() {
+                // initialize actor positions
+                pacman.setPos(232, 164);
+                blinky.setPos(257, 164);
+
+                // initialize actor directions
+                blinky.setDir(DIR_LEFT);
+                blinky.faceDirEnum = DIR_LEFT;
+                pacman.setDir(DIR_LEFT);
+
+                // initialize misc actor properties
+                blinky.scared = false;
+                blinky.mode = GHOST_OUTSIDE;
+
+                // temporarily override step sizes
+                pacman.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN_FRIGHT);
+                };
+                blinky.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_GHOST_FRIGHT);
+                };
+                // temporarily override steering functions
+                pacman.steer = blinky.steer = function(){};
+
+                fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+                fruitX = Math.round(Math.random()*200)+1;
+                fruitY = Math.round(Math.random()*40)+110;
+            },
+            update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                  pacman.update(j);
+                  blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                    drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                });
                 renderer.endMapClip();
             },
         },
@@ -13411,58 +13759,171 @@ var atariwomenCutscene4 = (function() {
         ctx.fillText(desc[i],14*tileSize,y+i*2*tileSize);
     }
   };
-  
-  // create new players woman and ghost for this scene
-  var woman = new Player();
-  var ghost = new Player();
-
-  var drawPlayer = function(ctx,player) {
-      var frame = player.getAnimFrame();
-      var func;
-      if (player == woman) {
-        func = atlas.drawAtariWoman;
-      }
-      else if (player == ghost) {
-        func = atlas.drawAtariWomenGhosts;
-      }
-      func(ctx, player.pixel.x, player.pixel.y, player.dirEnum, frame);
-  };
+  var fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+  var fruitX = Math.round(Math.random()*200)+1;
+  var fruitY = Math.round(Math.random()*40)+110;
 
   return newChildObject(scriptState, {
     init: function() {
         scriptState.init.call(this);
         
         audio.cutscene4.play();
+        
+        // initialize actor positions
+        pacman.setPos(232, 164);
+        blinky.setPos(257, 164);
 
+        // initialize actor directions
+        blinky.setDir(DIR_LEFT);
+        blinky.faceDirEnum = DIR_LEFT;
+        pacman.setDir(DIR_LEFT);
+
+        // initialize misc actor properties
+        blinky.scared = false;
+        blinky.mode = GHOST_OUTSIDE;
+
+        // clear other states
+        backupCheats();
+        clearCheats();
+        energizer.reset();
+
+        // temporarily override actor step sizes
+        pacman.getNumSteps = function() {
+            return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN);
+        };
+        blinky.getNumSteps = function() {
+          return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_ELROY2);
+        };
+
+        // temporarily override steering functions
+        pacman.steer = blinky.steer = function(){};
     },
     triggers: {
-
         // Blinky chases Pac-Man
         0: {
             update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                  pacman.update(j);
+                  blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
             },
             draw: function() {
                 renderer.blitMap();
                 renderer.beginMapClip();
                 renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                    drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                  });
                 renderer.endMapClip();
             },
         },
 
         // Pac-Man chases Blinky
-        260: {
+        300: {
             init: function() {
+                pacman.setPos(-193, 164);
+                blinky.setPos(-8, 164);
+
+                // initialize actor directions
+                blinky.setDir(DIR_RIGHT);
+                blinky.faceDirEnum = DIR_RIGHT;
+                pacman.setDir(DIR_RIGHT);
+
+                // initialize misc actor properties
+                blinky.scared = true;
+
+                // temporarily override step sizes
+                pacman.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN_FRIGHT);
+                };
+                blinky.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_GHOST_FRIGHT);
+                };
+                // temporarily override steering functions
+                pacman.steer = blinky.steer = function(){};
+
+                fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+                fruitX = Math.round(Math.random()*200)+1;
+                fruitY = Math.round(Math.random()*40)+110;
             },
             update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                    pacman.update(j);
+                    blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
             },
             draw: function() {
                 renderer.blitMap();
                 renderer.beginMapClip();
                 renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                //   var fruitNum = getNumFromFruitName("strawberry");
+                //   drawAtariWomenFruit(ctx,100,140, fruitNum, tileSize*3);
+                  drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                });
                 renderer.endMapClip();
             },
         },
+        600: {
+            init: function() {
+                // initialize actor positions
+                pacman.setPos(232, 164);
+                blinky.setPos(257, 164);
 
+                // initialize actor directions
+                blinky.setDir(DIR_LEFT);
+                blinky.faceDirEnum = DIR_LEFT;
+                pacman.setDir(DIR_LEFT);
+
+                // initialize misc actor properties
+                blinky.scared = false;
+                blinky.mode = GHOST_OUTSIDE;
+
+                // temporarily override step sizes
+                pacman.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_PACMAN_FRIGHT);
+                };
+                blinky.getNumSteps = function() {
+                    return Actor.prototype.getStepSizeFromTable.call(this, 5, STEP_GHOST_FRIGHT);
+                };
+                // temporarily override steering functions
+                pacman.steer = blinky.steer = function(){};
+
+                fruitNum = Math.round(Math.random()*7); // getNumFromFruitName("cherry");
+                fruitX = Math.round(Math.random()*200)+1;
+                fruitY = Math.round(Math.random()*40)+110;
+            },
+            update: function() {
+                var j;
+                for (j=0; j<2; j++) {
+                  pacman.update(j);
+                  blinky.update(j);
+                }
+                pacman.frames++;
+                blinky.frames++;
+            },
+            draw: function() {
+                renderer.blitMap();
+                renderer.beginMapClip();
+                renderer.renderFunc(drawDesc);
+                renderer.drawPlayer();
+                renderer.drawGhost(blinky);
+                renderer.renderFunc(function(ctx) {
+                    drawAtariWomenFruit(ctx,fruitX,fruitY, fruitNum, tileSize*3);
+                });
+                renderer.endMapClip();
+            },
+        },
         // end
         750: {
             init: function() {
