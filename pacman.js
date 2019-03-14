@@ -10717,7 +10717,7 @@ var cutSceneMenuState = (function() {
         if (s) {
             gameTitleState.shutdown();
             menu.disable();
-            playCutScene(s,cutSceneMenuState);
+            playCutScene(s,cutSceneMenuState,audio.cutscene1);
         }
     };
 
@@ -11851,14 +11851,15 @@ var initSwipe = function() {
 // Cutscenes
 //
 
-var playCutScene = function(cutScene, nextState) {
+var playCutScene = function(cutScene, nextState, sound) {
 
     // redraw map buffer with fruit list but no map structure
     map = undefined;
     renderer.drawMap(true);
 
+    setTimeout(sound.startLoop, 1200);
     // miss the audio silence and time it cleanly for pacman cut scene 1
-    //setTimeout(audio.coffeeBreakMusic.startLoop, 1200);
+    // setTimeout(audio.coffeeBreakMusic.startLoop, 1200);
     cutScene.nextState = nextState;
     switchState(cutScene, 60);
 
@@ -12954,7 +12955,7 @@ var atariwomenCutscene1 = (function() {
     init: function() {
         scriptState.init.call(this);
         
-        audio.cutscene1.play();
+        // audio.cutscene1.play();
 
         // initialize actor positions
         pacman.setPos(232, 164);
